@@ -27,6 +27,7 @@ class ReceiptActivity : BaseActivity() {
     lateinit var phoneNumber: String
     lateinit var dialog: Dialog
     private lateinit var token: String
+    private var order: Order.Result.Orders? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,7 +36,7 @@ class ReceiptActivity : BaseActivity() {
 
         var toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-        supportActionBar?.title="Receipt"
+
 
         try {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -46,7 +47,7 @@ class ReceiptActivity : BaseActivity() {
         }
         dialog = ProgressDialog.progressDialog(this)
 //        phoneNumber = intent.getStringExtra("mobile")!!
-//        c
+
 
         apiService = ApiClient.apiInterface
         shared =
@@ -54,9 +55,15 @@ class ReceiptActivity : BaseActivity() {
                 this@ReceiptActivity.resources.getString(R.string.app_name),
                 Context.MODE_PRIVATE
             )
-        token = shared.getString(this@ReceiptActivity.resources.getString(R.string.access_token), "")!!
-        val order = intent.getParcelableExtra<Order.Result.Orders>("order")
+        token =
+            shared.getString(this@ReceiptActivity.resources.getString(R.string.access_token), "")!!
+        order = intent.getParcelableExtra<Order.Result.Orders>("order")
         Log.d("phonenumber", order?.address!!)
+    }
+
+    override fun onStart() {
+        supportActionBar?.title = "#${order?.orderId}"
+        super.onStart()
     }
 
     override fun findContentView(): Int {

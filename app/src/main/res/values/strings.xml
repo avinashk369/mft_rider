@@ -26,6 +26,8 @@
 
     <string name="delivery_address">Delivery Address</string>
     <string name="cart">Cart</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="mark_delivered">Mark As Delivered</string>
 
 
 </resources>
