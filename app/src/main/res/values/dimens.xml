@@ -1,0 +1,46 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="radius">5dp</dimen>
+    <dimen name="hundred">100dp</dimen>
+    <dimen name="one">1dp</dimen>
+    <dimen name="three">3dp</dimen>
+    <dimen name="ten">10dp</dimen>
+    <dimen name="twenty">20dp</dimen>
+    <dimen name="thirty">30dp</dimen>
+    <dimen name="text_bold">30dp</dimen>
+    <dimen name="text_italic">20dp</dimen>
+    <dimen name="toolbar">48dp</dimen>
+    <dimen name="fifty">50dp</dimen>
+    <dimen name="twenty_five">50dp</dimen>
+    <dimen name="sixty">60dp</dimen>
+    <dimen name="lbl_italic">30dp</dimen>
+    <dimen name="lbl_bold">30dp</dimen>
+    <dimen name="hundred_two">200dp</dimen>
+    <dimen name="seventy">70dp</dimen>
+    <dimen name="fifteen">15dp</dimen>
+    <dimen name="eighteen">18dp</dimen>
+    <dimen name="eighty">80dp</dimen>
+    <dimen name="seven">7dp</dimen>
+    <dimen name="twelve">12dp</dimen>
+
+    <dimen name="activityPadding">16dp</dimen>
+    <dimen name="placeholderImage">60dp</dimen>
+    <dimen name="placeholderTextHeight">8dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="fourty">40dp</dimen>
+
+    <dimen name="bottom_sheet_corner_radius">16dp</dimen>
+    <dimen name="bottom_sheet_top_padding">8dp</dimen>
+
+    <dimen name="appintro2_fab_bg_size">56dp</dimen>
+    <dimen name="appintro2_fab_inset">16dp</dimen>
+
+    <dimen name="label">16sp</dimen>
+    <dimen name="value">14sp</dimen>
+    <dimen name="hundred_twenty">120dp</dimen>
+</resources>

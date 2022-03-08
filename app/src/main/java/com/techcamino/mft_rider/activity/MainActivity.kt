@@ -30,19 +30,19 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun riderLogin(){
-        val riderLogin = apiService.checkLogin("8510074200","123456")
-        riderLogin.enqueue(object:Callback<UserModel>{
+    private fun riderLogin() {
+        val riderLogin = apiService.checkLogin("8510074200", "123456")
+        riderLogin.enqueue(object : Callback<UserModel> {
             override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
-                if(response.isSuccessful){
-                    Log.d("Success",response.body()!!.status.toString())
-                }else{
-                    Log.d("failed",response.errorBody()!!.toString())
+                if (response.isSuccessful) {
+                    Log.d("Success", response.body()!!.status.toString())
+                } else {
+                    Log.d("failed", response.errorBody()!!.toString())
                 }
             }
 
             override fun onFailure(call: Call<UserModel>, t: Throwable) {
-                Log.d("Success",t.toString())
+                Log.d("Success", t.toString())
             }
         })
     }
@@ -52,14 +52,26 @@ class MainActivity : AppCompatActivity() {
         quotes.enqueue(object : Callback<UserModel> {
             override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
                 if (response.isSuccessful) {
-                    Log.d("Success", response.body()!!.results[0].author)
+                    val userModel: UserModel = response.body()!!
+                    if (userModel.status) {
+                    } else {
+                        try {
+                            var messageDetails = gson.fromJson(
+                                response.errorBody()!!.charStream(),
+                                MessageDetail::class.java
+                            )
+                            Log.d("Avinash", messageDetails.result.error.otp)
+                        } catch (e: Exception) {
+                            e.printStackTrace();
+                        }
+                    }
                 } else {
                     try {
                         var messageDetails = gson.fromJson(
                             response.errorBody()!!.charStream(),
                             MessageDetail::class.java
                         )
-                        Log.d("Avinash", messageDetails.statusMessage)
+                        Log.d("Avinash", messageDetails.result.error.otp)
                     } catch (e: Exception) {
                         e.printStackTrace();
                     }
@@ -77,14 +89,14 @@ class MainActivity : AppCompatActivity() {
             val response = apiService.getQuote()
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
-                    Log.d("ayush: ", response.body()!!.results[0].author)
+                    Log.d("ayush: ", response.body()!!.toString())
                 } else {
                     try {
                         var messageDetails = gson.fromJson(
                             response.errorBody()!!.charStream(),
                             MessageDetail::class.java
                         )
-                        Log.d("Avinash", messageDetails.statusMessage)
+                        Log.d("Avinash", messageDetails.result.error.otp)
                     } catch (e: Exception) {
                         e.printStackTrace();
                     }

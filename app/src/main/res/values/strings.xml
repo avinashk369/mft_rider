@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">MFT_RIDER</string>
+    <!-- Login Screen -->
+    <string name="login_title">Logistic login to my flower tree</string>
+    <string name="phone_number">Phone number</string>
+    <string name="btn_continue">Continue</string>
+    <string name="need_help">Need help?</string>
+    <string name="call_us">Call us at</string>
+    <string name="help_number">+98711 41000</string>
+    <string name="access_token">access_token</string>
+
+    <!-- Otp Screen -->
+    <string name="otp_title">Please enter 6 digit pin</string>
+
+
 </resources>

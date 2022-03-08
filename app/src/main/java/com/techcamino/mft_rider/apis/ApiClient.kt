@@ -1,6 +1,7 @@
 package com.techcamino.mft_rider.apis
 
 
+import com.techcamino.mft_rider.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -21,6 +22,9 @@ object ApiClient {
     }
 
     private fun getHttpClient():OkHttpClient{
+        if(BuildConfig.DEBUG){
+            // disable logger in production
+        }
     val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
         val httpClient = OkHttpClient.Builder()

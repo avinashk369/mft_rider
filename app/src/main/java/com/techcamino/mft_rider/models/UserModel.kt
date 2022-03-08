@@ -1,11 +1,16 @@
 package com.techcamino.mft_rider.models
 
 data class UserModel(
-    val count: Int,
-    val lastItemIndex: Int,
-    val page: Int,
-    val results: List<Result>,
-    val totalCount: Int,
-    val totalPages: Int,
-    val status: Boolean
-)
+    val message: String,
+    val status: Boolean,
+    val result: Result
+){
+    data class Result(
+        val name: String,
+        val mobile: String,
+        val token: String,
+        val error: ErrorModel
+    ){
+        data class ErrorModel(var otp:String)
+    }
+}

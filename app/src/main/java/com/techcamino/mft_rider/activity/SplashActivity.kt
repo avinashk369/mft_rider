@@ -15,7 +15,7 @@ class SplashActivity : AppCompatActivity() {
         lifecycleScope.launch {
             delay(3000L)
 
-            Intent(this@SplashActivity,MainActivity::class.java).apply {
+            Intent(this@SplashActivity,LoginActivity::class.java).apply {
                 putExtra("name","Avinash")
             }.also {
                 startActivity(it)
