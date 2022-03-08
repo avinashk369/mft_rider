@@ -32,4 +32,48 @@
     <style name="ProgressBarTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorAccent">@color/maroon</item>
     </style>
+
+    <!-- Navigatio theme -->
+    <style name="Navigation" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="colorControlActivated">@color/faded</item>
+        <item name="colorControlHighlight">@color/faded</item>
+    </style>
+
+    <style name="NavigationDrawer" parent="ThemeOverlay.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="colorControlActivated">@color/faded</item>
+        <item name="colorControlHighlight">@color/faded</item>
+    </style>
+
+    <!-- My toolbar theme -->
+    <style name="AppTheme.Mytoolbar" parent="@style/ThemeOverlay.AppCompat.Dark">
+
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/peach</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+
+        <!-- change textColorPrimary to reflect toolbar text color -->
+        <item name="drawerArrowStyle">@style/DrawerIcon</item>
+        <item name="fontFamily">sans-serif-condensed-medium</item>
+        <item name="actionOverflowButtonStyle">@style/MyOverflowButtonStyle</item>
+    </style>
+    <!-- change drawerIcon to reflect drawer icon color -->
+    <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/black</item>
+    </style>
+
+    <style name="MyOverflowButtonStyle" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/black</item>
+    </style>
+
+
 </resources>

@@ -4,29 +4,20 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.techcamino.mft_rider.R
 import com.techcamino.mft_rider.apis.ApiClient
 import com.techcamino.mft_rider.apis.ApiInterface
-import com.techcamino.mft_rider.databinding.ActivityLoginBinding
 import com.techcamino.mft_rider.databinding.ActivityOtpBinding
-import com.techcamino.mft_rider.models.MessageDetail
 import com.techcamino.mft_rider.models.UserModel
-import com.techcamino.mft_rider.models.orders.Data
 import com.techcamino.mft_rider.utils.ProgressDialog
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
-import java.lang.Exception
 
 class OtpActivity : BaseActivity(), View.OnClickListener {
     private lateinit var binding: ActivityOtpBinding
@@ -101,7 +92,7 @@ class OtpActivity : BaseActivity(), View.OnClickListener {
                             .show()
                         edit.apply()
                         Intent(this@OtpActivity, HomeActivity::class.java).apply {
-                            // putExtra("name","Avinash")
+                             putExtra("mobile",userModel.result.mobile)
                         }.also {
                             startActivity(it)
                             finish()

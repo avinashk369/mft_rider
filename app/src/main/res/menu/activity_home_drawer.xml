@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_outline_phone_24"
+        app:actionViewClass="android.widget.TextView"
+        android:title="@string/app_name" />
+    <!--<item
+        android:id="@+id/nav_team"
+        android:icon="@drawable/ic_supervisor_account_black_24dp"
+        android:title="@string/team" />
+
+    <item
+        android:id="@+id/nav_ad_view"
+        android:icon="@drawable/ic_menu_slideshow"
+        android:title="@string/today_task" />
+
+    -->
+<!--    <item-->
+<!--        android:id="@+id/nav_task_2"-->
+<!--        android:icon="@drawable/ic_menu_slideshow"-->
+<!--        android:title="@string/app_name" />-->
+<!--    <item-->
+<!--        android:id="@+id/nav_wish_list"-->
+<!--        android:icon="@drawable/ic_baseline_favorite_24"-->
+<!--        android:title="@string/wishlist" />-->
+
+<!--    <item-->
+<!--        android:id="@+id/nav_order_history"-->
+<!--        android:icon="@drawable/ic_history_black_48dp"-->
+<!--        android:title="@string/order_history" />-->
+
+<!--    <item android:title="@string/profile">-->
+<!--        <menu>-->
+<!--            <group android:checkableBehavior="single">-->
+                <!--<item
+                    android:id="@+id/action_epin"
+                    android:icon="@drawable/ic_fiber_pin_black_24dp"
+                    android:title="@string/epin" />
+
+                <item
+                    android:id="@+id/action_level_report"
+                    android:icon="@drawable/ic_receipt_black_24dp"
+                    android:title="@string/level_report" />
+
+                <item
+                    android:id="@+id/action_payout_report"
+                    android:icon="@drawable/ic_receipt_black_24dp"
+                    android:title="@string/payout_report" />-->
+
+
+
+                <!--<item
+                    android:id="@+id/action_epin_list"
+                    android:icon="@drawable/f_list"
+                    android:title="@string/epin_list" />-->
+
+<!--            </group>-->
+<!--        </menu>-->
+<!--    </item>-->
+
+
+<!--    <item android:title="Settings">-->
+<!--        <menu>-->
+<!--            <group android:checkableBehavior="single">-->
+
+<!--                <item-->
+<!--                    android:id="@+id/nav_share"-->
+<!--                    android:icon="@drawable/ic_menu_share"-->
+<!--                    android:title="@string/menu_share" />-->
+<!--                &lt;!&ndash;<item-->
+<!--                    android:id="@+id/nav_how_it_works"-->
+<!--                    android:icon="@drawable/ic_help_black_24dp"-->
+<!--                    android:title="@string/how_it_works" />-->
+<!--                <item-->
+<!--                    android:id="@+id/nav_help"-->
+<!--                    android:icon="@drawable/ic_help_black_24dp"-->
+<!--                    android:title="@string/need_help" />-->
+
+<!--                <item-->
+<!--                    android:id="@+id/nav_video"-->
+<!--                    android:icon="@drawable/ic_menu_camera"-->
+<!--                    android:title="@string/vedios" />&ndash;&gt;-->
+
+
+
+<!--                <item-->
+<!--                    android:id="@+id/nav_logout"-->
+<!--                    android:icon="@drawable/ic_baseline_exit_to_app_24"-->
+<!--                    android:title="@string/signout" />-->
+
+<!--            </group>-->
+<!--        </menu>-->
+<!--    </item>-->
+</menu>

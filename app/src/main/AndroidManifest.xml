@@ -13,6 +13,9 @@
         android:theme="@style/Theme.MFT_RIDER"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.ReceiptActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.HomeActivity"
             android:exported="false" />
         <activity
