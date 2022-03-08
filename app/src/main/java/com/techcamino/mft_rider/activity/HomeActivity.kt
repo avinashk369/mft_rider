@@ -21,6 +21,7 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.util.Log
 import android.view.Gravity
+import android.view.Menu
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.techcamino.mft_rider.adapters.OrderAdapter
 import com.techcamino.mft_rider.models.orders.Order
@@ -57,13 +58,13 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 this@HomeActivity.resources.getString(R.string.app_name),
                 Context.MODE_PRIVATE
             )
-        token = shared.getString(this@HomeActivity.resources.getString(R.string.access_token), "")!!
-        // call api to get orders
-        getOrders(token)
-        // get all order history
-        getOrderHistory(token)
-        //binding.appBar.toolbar.title = this@HomeActivity.resources.getString(R.string.app_name)
+
+        binding.appBar.toolbar.title = ""
         setSupportActionBar(binding.appBar.toolbar)
+        supportActionBar?.setIcon(R.drawable.bg)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayUseLogoEnabled(true)
+
         val toggle = ActionBarDrawerToggle(
             this@HomeActivity,
             binding.drawerLayout,
@@ -91,6 +92,30 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //            .thumbnail(.5f)
 //            .fitCenter()
 //            .into<Target<Drawable>>(appIcon)
+    }
+
+    override fun onStart() {
+        token = shared.getString(this@HomeActivity.resources.getString(R.string.access_token), "")!!
+        // call api to get orders
+        getOrders(token)
+        // get all order history
+        getOrderHistory(token)
+        super.onStart()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main,menu)
+        val menuItem:MenuItem= menu!!.findItem(R.id.action_cart)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_cart->{
+                Log.d("Shopping cart","Shopping cart items")
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun findContentView(): Int {

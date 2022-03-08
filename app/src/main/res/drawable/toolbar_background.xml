@@ -5,7 +5,7 @@
             <solid android:color="@color/peach" />
         </shape>
     </item>
-    <!--<item android:drawable="@drawable/icon" android:gravity="center">
-        &lt;!&ndash;<bitmap android:src="@drawable/twitter_icon" android:gravity="center" />&ndash;&gt;
-    </item>-->
+<!--    <item android:drawable="@drawable/bg_title" android:gravity="start">-->
+<!--        <bitmap android:src="@drawable/bg_title" android:gravity="start" />-->
+<!--    </item>-->
 </layer-list>

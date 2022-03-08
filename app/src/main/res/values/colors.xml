@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
 
+    <color name="appintro_default_fab_background_color">#60222222</color>
 
     <!-- app theme colors -->
     <color name="peach">#FFF5F5</color>

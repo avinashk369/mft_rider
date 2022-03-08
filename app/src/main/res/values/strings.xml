@@ -24,4 +24,8 @@
     <string name="pending_order">Pending Order</string>
 
 
+    <string name="delivery_address">Delivery Address</string>
+    <string name="cart">Cart</string>
+
+
 </resources>

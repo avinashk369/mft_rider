@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:layout_margin="@dimen/radius"
-    app:cardBackgroundColor="@color/peach"
-    app:cardElevation="@dimen/one">
+    app:cardBackgroundColor="@color/faded"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="@dimen/hundred"
-            android:layout_height="@dimen/hundred_twenty"
+            android:layout_height="match_parent"
             app:cardCornerRadius="@dimen/radius"
             app:cardElevation="0dp"
             app:cardBackgroundColor="@color/peach">

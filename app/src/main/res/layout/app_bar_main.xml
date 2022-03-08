@@ -13,7 +13,6 @@
         android:background="@drawable/toolbar_background"
         android:elevation="0dp"
         android:fitsSystemWindows="true"
-        android:gravity="center"
         android:theme="@style/AppTheme.Mytoolbar">
         <!--<TextView
             android:layout_width="match_parent"
