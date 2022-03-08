@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import com.techcamino.mft_rider.R
@@ -37,7 +38,8 @@ class ReceiptActivity : BaseActivity() {
         supportActionBar?.title="Receipt"
 
         try {
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_ios_24)
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -63,5 +65,10 @@ class ReceiptActivity : BaseActivity() {
 
     override fun bindViewWithViewBinding(view: View) {
         binding = ActivityReceiptBinding.bind(view)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }

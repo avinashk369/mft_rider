@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.techcamino.mft_rider.R
@@ -20,6 +21,7 @@ class OrderAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(order: Order.Result.Orders)
+        fun changeState(order: Order.Result.Orders,status:Boolean)
     }
 
     // create new views
@@ -40,13 +42,21 @@ class OrderAdapter(
         // sets the image to the imageview from our itemHolder class
         //holder.imageView.setImageResource(order.images[0])
         Glide.with(context)
-            .load(order.images[0])
+            .load("https://picsum.photos/200")
             .override(600, 600)
             .fitCenter()
             .centerCrop()
             .into(holder.imageView);
         // sets the text to the textview from our itemHolder class
-        holder.textView.text = order.address
+        holder.delAddress.text = order.address
+        holder.orderId.text = "#${order.orderId}"
+        if(order.riderStatus?.lowercase() == "accepted"){
+            holder.viewMap.visibility=View.VISIBLE
+            holder.decline.visibility=View.GONE
+        }else{
+            holder.viewMap.visibility=View.GONE
+            holder.decline.visibility=View.VISIBLE
+        }
         holder.bind(order,itemClickListener)
 
     }
@@ -59,9 +69,15 @@ class OrderAdapter(
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageview)
-        val textView: TextView = itemView.findViewById(R.id.textView)
+        val delAddress: TextView = itemView.findViewById(R.id.del_address)
+        val orderId: TextView = itemView.findViewById(R.id.order_id)
+        val decline: CardView = itemView.findViewById(R.id.decline_btn)
+        val accept: CardView = itemView.findViewById(R.id.accept_btn)
+        val viewMap: CardView = itemView.findViewById(R.id.view_map)
         fun bind(item: Order.Result.Orders, listener: OnItemClickListener) {
             itemView.setOnClickListener { listener.onItemClick(item) }
+            decline.setOnClickListener{ listener.changeState(item,false)}
+            accept.setOnClickListener{ listener.changeState(item,true)}
         }
     }
 }

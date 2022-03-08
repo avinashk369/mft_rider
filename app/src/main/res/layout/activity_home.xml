@@ -20,9 +20,11 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:background="@drawable/side_nav_round"
         android:theme="@style/NavigationDrawer"
         app:headerLayout="@layout/nav_header_home"
-        app:menu="@menu/activity_home_drawer" >
+        app:menu="@menu/activity_home_drawer"
+        app:itemBackground="@drawable/top_separator">
 
         <LinearLayout
             android:id="@+id/logout_layout"
@@ -30,20 +32,29 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="bottom"
+            android:gravity="right"
             android:background="@drawable/top_separator"
             android:padding="@dimen/activity_horizontal_margin">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_outline_phone_24"
-                android:backgroundTint="@color/maroon"/>
-            <TextView
-                android:id="@+id/logout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/maroon"
-                android:layout_marginLeft="@dimen/thirty"/>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_logout"
+                android:layout_width="@dimen/eighty"
+                android:layout_height="@dimen/thirty"
+                android:layout_marginStart="@dimen/ten"
+                android:layout_marginEnd="@dimen/ten"
+                app:cardBackgroundColor="@color/peach"
+                app:cardCornerRadius="@dimen/radius"
+                app:cardElevation="0dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center|center_vertical|center_horizontal"
+                    android:text="@string/logout"
+                    android:textColor="@color/maroon"
+                    android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
 
     </com.google.android.material.navigation.NavigationView>

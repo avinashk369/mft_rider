@@ -6,4 +6,7 @@
         android:endColor="@color/maroon"
         android:startColor="@color/peach"
         android:type="linear" />
+    <corners android:topRightRadius="@dimen/bottom_sheet_corner_radius" />
+
+
 </shape>

@@ -8,9 +8,20 @@
     <string name="call_us">Call us at</string>
     <string name="help_number">+98711 41000</string>
     <string name="access_token">access_token</string>
+    <string name="logout">Logout</string>
 
     <!-- Otp Screen -->
     <string name="otp_title">Please enter 6 digit pin</string>
+
+    <string name="in_km">in KM</string>
+    <string name="btn_decline">Decline</string>
+    <string name="btn_accept">Accept</string>
+    <string name="view_map">View Map</string>
+
+    <!-- Menu item -->
+    <string name="delivered">Delivered</string>
+    <string name="accepted_order">Accepted Order</string>
+    <string name="pending_order">Pending Order</string>
 
 
 </resources>

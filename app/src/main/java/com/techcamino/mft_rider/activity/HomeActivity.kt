@@ -76,8 +76,8 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         toggle.syncState()
         binding.navView.setNavigationItemSelectedListener(this)
         binding.logoutLayout.setOnClickListener(this)
-
         val headerView = binding.navView.getHeaderView(0)
+
 
 
         // get user name and email textViews
@@ -101,20 +101,17 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding = ActivityHomeBinding.bind(view)
     }
 
-    private fun getOrderHistory(token:String){
+    private fun getOrderHistory(token: String) {
         val orderHistory = apiService.getOrderHistory("Bearer $token")
-        orderHistory.enqueue(object :Callback<Data>{
+        orderHistory.enqueue(object : Callback<Data> {
             override fun onResponse(call: Call<Data>, response: Response<Data>) {
-                if(response.isSuccessful){
-                    if(response.body()!!.status!!) {
+                if (response.isSuccessful) {
+                    if (response.body()!!.status!!) {
                         val orderHistory: OrderHistory = response.body()!!.result!!
-                        Log.d("accepted order count",orderHistory.acceptedOrders.toString())
-                        val item = (binding.navView.menu.findItem(R.id.nav_profile).actionView) as TextView
-                        item.gravity= Gravity.CENTER_VERTICAL
-                        item.setTypeface(null, Typeface.BOLD)
-                        item.text=orderHistory.acceptedOrders.toString()
+                        Log.d("accepted order count", orderHistory.acceptedOrders.toString())
+                        setMenuItemVal(orderHistory)
 
-                    }else{
+                    } else {
 
                     }
 
@@ -127,6 +124,25 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         })
     }
 
+    private fun setMenuItemVal(orderHistory: OrderHistory): Unit {
+        val item =
+            (binding.navView.menu.findItem(R.id.delivered).actionView) as TextView
+        item.gravity = Gravity.CENTER_VERTICAL
+        item.setTypeface(null, Typeface.BOLD)
+        item.text = orderHistory.acceptedOrders.toString()
+        // pending order
+        val pending =
+            (binding.navView.menu.findItem(R.id.pending).actionView) as TextView
+        pending.gravity = Gravity.CENTER_VERTICAL
+        pending.setTypeface(null, Typeface.BOLD)
+        pending.text = orderHistory.pendingOrders.toString()
+        // accepted order
+        val accepted =
+            (binding.navView.menu.findItem(R.id.accepted).actionView) as TextView
+        accepted.gravity = Gravity.CENTER_VERTICAL
+        accepted.setTypeface(null, Typeface.BOLD)
+        accepted.text = orderHistory.acceptedOrders.toString()
+    }
 
     private fun getOrders(token: String) {
         val orders = apiService.getAllOrders("Bearer $token", "All", "1")
@@ -135,7 +151,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 if (response.isSuccessful) {
                     val orderList: Order = response.body()!!
                     Log.d("order limit", orderList.result?.orders?.size.toString())
-                    if(orderList.status!!){
+                    if (orderList.status!!) {
                         renderOrders(orderList.result?.orders!!)
                     }
 
@@ -153,9 +169,16 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         // this creates a vertical layout Manager
         binding.appBar.orderListView.dashboard.orderList.layoutManager =
             LinearLayoutManager(this@HomeActivity)
+//        binding.appBar.orderListView.dashboard.orderList.addItemDecoration(
+//            androidx.recyclerview.widget.DividerItemDecoration(
+//                this@HomeActivity,
+//                androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+//            )
+//        )
+
 
         // This will pass the ArrayList to our Adapter
-        val adapter = OrderAdapter(orders,this@HomeActivity,this)
+        val adapter = OrderAdapter(orders, this@HomeActivity, this)
 
         // Setting the Adapter with the recyclerview
         binding.appBar.orderListView.dashboard.orderList.adapter = adapter
@@ -198,7 +221,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onItemClick(order: Order.Result.Orders) {
-        Log.d("Order detail",order.address!!)
+        Log.d("Order detail", order.address!!)
         Intent(
             this@HomeActivity,
             ReceiptActivity::class.java
@@ -206,7 +229,14 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             putExtra("order", order)
         }.also {
             startActivity(it)
-            finish()
+        }
+    }
+
+    override fun changeState(order: Order.Result.Orders, status: Boolean) {
+        if (status) {
+            Log.d("state", "Order accepted $status")
+        } else {
+            Log.d("state", "Order decline $status")
         }
     }
 }
