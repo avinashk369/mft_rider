@@ -22,8 +22,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.techcamino.mft_rider.R
+import com.techcamino.mft_rider.adapters.SubOrderAdapter
 import com.techcamino.mft_rider.apis.ApiClient
 import com.techcamino.mft_rider.apis.ApiInterface
 import com.techcamino.mft_rider.databinding.ActivityReceiptBinding
@@ -39,7 +41,8 @@ import java.io.File
 import java.io.IOException
 
 
-class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultListener {
+class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultListener,
+    SubOrderAdapter.OnItemClickListener {
     private lateinit var binding: ActivityReceiptBinding
     lateinit var shared: SharedPreferences
     lateinit var apiService: ApiInterface
@@ -47,7 +50,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     lateinit var dialog: Dialog
     private lateinit var token: String
     private var order: Order.Result.Orders? = null
-
+    private var subOrder: OrderDetail.Result.OrderInfo.Detail? = null
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
     private lateinit var resultLauncher1: ActivityResultLauncher<Intent>
     private var pictureFilePath: String? = null
@@ -283,7 +286,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.delivered_btn -> {
-                checkPermissions(Manifest.permission.CAMERA, MY_PERMISSIONS_REQUEST_CAMERA)
+
             }
         }
     }
@@ -314,8 +317,22 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                 if (response.isSuccessful) {
                     if (response.body()?.status!!) {
                         renderDetail(response.body()?.result?.orderInfo!!)
+                        if (response.body()?.result?.detail?.isEmpty()!!) {
+                            binding.noData.visibility = View.VISIBLE
+                        } else {
+                            binding.noData.visibility = View.GONE
+                            renderSubOrders(response.body()?.result?.detail!!)
+                        }
                     }
                     Log.d("data getting", response.body()?.result?.orderInfo?.shippingCity!!)
+                } else {
+                    Intent(
+                        this@ReceiptActivity,
+                        LoginActivity::class.java
+                    ).also {
+                        startActivity(it)
+                        finish()
+                    }
                 }
             }
 
@@ -345,7 +362,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     ) {
         try {
             dialog.show()
-            Log.d("uploading","uploading image started")
+            Log.d("uploading", "uploading image started")
             var upload =
                 apiService.uploadImage("Bearer $token", orderId, imageUrl, product, suborders)
             upload.enqueue(object : Callback<MessageDetail> {
@@ -353,18 +370,18 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     call: Call<MessageDetail>,
                     response: Response<MessageDetail>
                 ) {
-                   if(response.isSuccessful){
-                       Log.d("Success","Image uploaded")
-                   }else{
-                       Log.d("Failed","Image not uploaded")
-                   }
-                    if(dialog.isShowing)
+                    if (response.isSuccessful) {
+                        Log.d("Success", "Image uploaded")
+                    } else {
+                        Log.d("Failed", "Image not uploaded")
+                    }
+                    if (dialog.isShowing)
                         dialog.dismiss()
                 }
 
                 override fun onFailure(call: Call<MessageDetail>, t: Throwable) {
-                    Log.d("OnFailure","Image not uploaded")
-                    if(dialog.isShowing)
+                    Log.d("OnFailure", "Image not uploaded")
+                    if (dialog.isShowing)
                         dialog.dismiss()
                 }
             })
@@ -372,5 +389,22 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             e.stackTrace
             Log.d("Exception", "Image upload failed")
         }
+    }
+
+    private fun renderSubOrders(orders: ArrayList<OrderDetail.Result.OrderInfo.Detail>) {
+        // this creates a vertical layout Manager
+        binding.suborders.layoutManager =
+            LinearLayoutManager(this@ReceiptActivity)
+        // This will pass the ArrayList to our Adapter
+        val adapter = SubOrderAdapter(orders, this@ReceiptActivity, this)
+
+        // Setting the Adapter with the recyclerview
+        binding.suborders.adapter = adapter
+    }
+
+    override fun onItemClick(order: OrderDetail.Result.OrderInfo.Detail) {
+        Log.d("Suborder", order.subOrderId!!)
+        subOrder = order
+        checkPermissions(Manifest.permission.CAMERA, MY_PERMISSIONS_REQUEST_CAMERA)
     }
 }

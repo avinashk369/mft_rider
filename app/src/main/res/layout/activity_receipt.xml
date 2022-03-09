@@ -194,15 +194,30 @@
                             android:layout_weight="1"
                             android:layout_height="@dimen/hundred"
                             android:src="@drawable/logo"/>
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="@dimen/hundred"
-                            android:src="@drawable/logo"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.cardview.widget.CardView>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/suborders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/ten"
+                tools:listitem="@layout/suborder_view_design"
+                app:layout_constraintTop_toBottomOf="@+id/detail"
+                app:layout_constraintBottom_toTopOf="@+id/delivered_btn" />
+            <TextView
+                android:visibility="visible"
+                android:id="@+id/no_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/ten"
+                android:gravity="center"
+                android:text="@string/no_data"
+                android:textColor="@color/maroon"
+                app:layout_constraintTop_toBottomOf="@+id/detail"
+                app:layout_constraintBottom_toTopOf="@+id/delivered_btn"/>
             <androidx.cardview.widget.CardView
                 android:id="@+id/delivered_btn"
                 android:layout_width="match_parent"
@@ -212,7 +227,7 @@
                 android:layout_marginHorizontal="@dimen/fifteen"
                 app:cardElevation="0dp"
                 app:layout_constraintBottom_toTopOf="@+id/footer_card"
-                app:layout_constraintTop_toBottomOf="@+id/detail">
+                app:layout_constraintTop_toBottomOf="@+id/suborders">
 
                 <TextView
                     android:layout_width="match_parent"

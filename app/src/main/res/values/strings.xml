@@ -18,6 +18,7 @@
     <string name="in_km">in KM</string>
     <string name="btn_decline">Decline</string>
     <string name="btn_accept">Accept</string>
+    <string name="btn_upload">Upload image</string>
     <string name="view_map">View Map</string>
 
     <!-- Menu item -->
