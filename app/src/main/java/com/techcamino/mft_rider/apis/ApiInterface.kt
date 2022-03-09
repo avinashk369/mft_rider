@@ -6,6 +6,7 @@ import com.techcamino.mft_rider.models.orders.Data
 import com.techcamino.mft_rider.models.orders.Order
 import com.techcamino.mft_rider.models.orders.OrderDetail
 import com.techcamino.mft_rider.models.orders.OrderHistory
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -48,14 +49,10 @@ interface ApiInterface {
         @Field("reason") reason: String,
     ): Call<MessageDetail>
 
-    @POST("riderapp/api/imageUpload")
-    @Multipart
+    @POST("http://192.168.43.170:8888/tda_app/api/image/test")
     fun uploadImage(
         @Header("Authorization") toke: String,
-        @Field("order_id") orderId: String,
-        @Part("images") imageUrl: File,
-        @Field("products") products: Array<Int>,
-        @Field("suborders") suborders: Array<Int>,
+        @Body file: RequestBody
     ): Call<MessageDetail>
 
     @GET("/quotesss")

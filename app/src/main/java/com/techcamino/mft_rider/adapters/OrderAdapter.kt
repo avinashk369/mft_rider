@@ -54,6 +54,7 @@ class OrderAdapter(
         holder.delAddress.text = order.address
         holder.orderId.text = "#${order.orderId}"
         holder.delMethod.text=order.shippingmethod
+        holder.delTime.text = order.shippingtimeslot
 
         when (order.riderStatus?.lowercase()) {
             "accepted_orders" -> {
@@ -87,6 +88,7 @@ class OrderAdapter(
         val delAddress: TextView = itemView.findViewById(R.id.del_address)
         val orderId: TextView = itemView.findViewById(R.id.order_id)
         val decText: TextView = itemView.findViewById(R.id.dec_text)
+        val delTime: TextView = itemView.findViewById(R.id.del_time)
         val delMethod: TextView = itemView.findViewById(R.id.del_method)
         val acptText: TextView = itemView.findViewById(R.id.acpt_text)
         val decline: CardView = itemView.findViewById(R.id.decline_btn)

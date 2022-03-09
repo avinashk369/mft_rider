@@ -34,11 +34,15 @@ import com.techcamino.mft_rider.models.orders.Order
 import com.techcamino.mft_rider.models.orders.OrderDetail
 import com.techcamino.mft_rider.permissionUtils.OnActivityResultListener
 import com.techcamino.mft_rider.utils.ProgressDialog
+import okhttp3.MediaType
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.io.IOException
+import okhttp3.MultipartBody
+
+import okhttp3.RequestBody
 
 
 class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultListener,
@@ -57,6 +61,8 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     private var imageName: String? = null
     private val MY_PERMISSIONS_REQUEST_CAMERA = 99
     private val MY_PERMISSIONS_REQUEST_STORAGE = 88
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -176,6 +182,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
 
     private fun handleCameraImage(intent: Intent?) {
+        Log.d("handeling camer image", "here i am")
         val spl = pictureFilePath?.split("/")
         val da = spl?.get(spl?.size - 1)
         val imgFile = File(pictureFilePath)
@@ -196,6 +203,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         takePictureIntent.resolveActivity(packageManager)?.also {
+            getPictureFile(order?.orderId!!, "mft")
             // Create the File where the photo should go
             val photoFile: File? = try {
                 createImageFile(this.resources.getString(R.string.app_name), order?.orderId!!)
@@ -233,8 +241,10 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                         )
                     Log.d("into elese", photoFile.toString())
                     if (imageUri != null) {
+
                         currentPhotoPath = imageUri.toString()
                         shareUri = imageUri
+                        Log.d("avinash", pictureFilePath!!)
                     }
                     val splitted = photoFile.toString().split("/")
                     imageName = splitted[splitted.size - 1]
@@ -278,7 +288,14 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                 binding.uploadedImage.visibility = View.VISIBLE
                 Glide.with(this).load(currentPhotoPath).into(binding.uploadedImage)
             }
-            //uploadImage(token,order?.orderId!!,File(currentPhotoPath), arrayOf(4464), arrayOf(81592501))
+
+            uploadImage(
+                token,
+                order?.orderId!!,
+                File(pictureFilePath),
+                intArrayOf(4464),
+                intArrayOf(81592501)
+            )
         }
 
     }
@@ -357,14 +374,36 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         token: String,
         orderId: String,
         imageUrl: File,
-        product: Array<Int>,
-        suborders: Array<Int>
+        product: IntArray,
+        suborders: IntArray
     ) {
         try {
             dialog.show()
-            Log.d("uploading", "uploading image started")
+            Log.d("uploading", "uploading image started ${imageUrl.name}")
+
+            // Parsing any Media type file
+
+            // Parsing any Media type file
+            val builder = MultipartBody.Builder()
+            builder.setType(MultipartBody.FORM)
+
+            builder.addFormDataPart("owner_id", order?.orderId!!)
+            //builder.addFormDataPart("products", product.toString())
+            builder.addFormDataPart("owner_type", "1")
+
+            // Map is used to multipart the file using okhttp3.RequestBody
+            // Multiple Images
+
+            builder.addFormDataPart(
+                "image_url",
+                imageUrl.name,
+                RequestBody.create(MediaType.parse("multipart/form-data"), imageUrl)
+            )
+
+            val requestBody = builder.build()
+
             var upload =
-                apiService.uploadImage("Bearer $token", orderId, imageUrl, product, suborders)
+                apiService.uploadImage("Bearer $token", requestBody)
             upload.enqueue(object : Callback<MessageDetail> {
                 override fun onResponse(
                     call: Call<MessageDetail>,
@@ -387,7 +426,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             })
         } catch (e: Exception) {
             e.stackTrace
-            Log.d("Exception", "Image upload failed")
+            Log.d("Exception", "Image upload failed" + e.printStackTrace())
         }
     }
 
