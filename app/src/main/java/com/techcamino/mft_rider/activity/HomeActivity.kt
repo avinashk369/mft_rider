@@ -52,7 +52,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     lateinit var dialog: Dialog
     lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var token: String
-    private lateinit var orderId:String
+    private lateinit var orderId: String
     private lateinit var orderData: Order.Result.Orders
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,26 +136,37 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     private fun getOrderHistory(token: String) {
-        val orderHistory = apiService.getOrderHistory("Bearer $token")
-        orderHistory.enqueue(object : Callback<Data> {
-            override fun onResponse(call: Call<Data>, response: Response<Data>) {
-                if (response.isSuccessful) {
-                    if (response.body()!!.status!!) {
-                        val orderHistory: OrderHistory = response.body()!!.result!!
-                        Log.d("accepted order count", orderHistory.acceptedOrders.toString())
-                        setMenuItemVal(orderHistory)
+        try {
+            val orderHistory = apiService.getOrderHistory("Bearer $token")
+            orderHistory.enqueue(object : Callback<Data> {
+                override fun onResponse(call: Call<Data>, response: Response<Data>) {
+                    if (response.isSuccessful) {
+                        if (response.body()!!.status!!) {
+                            val orderHistory: OrderHistory = response.body()!!.result!!
+                            Log.d("accepted order count", orderHistory.acceptedOrders.toString())
+                            setMenuItemVal(orderHistory)
+
+                        }
 
                     } else {
-
+                        Log.d("accepted order count", "Whats going ons")
+                        Intent(
+                            this@HomeActivity,
+                            LoginActivity::class.java
+                        ).also {
+                            startActivity(it)
+                            finish()
+                        }
                     }
-
                 }
-            }
 
-            override fun onFailure(call: Call<Data>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-        })
+                override fun onFailure(call: Call<Data>, t: Throwable) {
+                    Log.d("Failed", "Order history failed here")
+                }
+            })
+        } catch (e: Exception) {
+            Log.d("Exception", "Something went wrong getting history")
+        }
     }
 
     private fun setMenuItemVal(orderHistory: OrderHistory): Unit {
@@ -186,19 +197,22 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     private fun getOrders(token: String, type: String) {
-        val orders = apiService.getAllOrders("Bearer $token", type, "1")
-        orders.enqueue(object : Callback<Order> {
-            override fun onResponse(call: Call<Order>, response: Response<Order>) {
-                if (response.isSuccessful) {
-                    val orderList: Order = response.body()!!
-                    Log.d("order limit", orderList.result?.orders?.size.toString())
-                    if (orderList.result?.orders?.isEmpty()!!) {
-                        binding.appBar.orderListView.dashboard.noData.visibility = View.VISIBLE
-                    } else {
-                        binding.appBar.orderListView.dashboard.noData.visibility = View.GONE
-                    }
-                    if (orderList.status!!) {
-                        renderOrders(orderList.result?.orders!!)
+        try {
+            val orders = apiService.getAllOrders("Bearer $token", type, "1")
+            orders.enqueue(object : Callback<Order> {
+                override fun onResponse(call: Call<Order>, response: Response<Order>) {
+                    if (response.isSuccessful) {
+                        val orderList: Order = response.body()!!
+                        Log.d("order limit", orderList.result?.orders?.size.toString())
+                        if (orderList.result?.orders?.isEmpty()!!) {
+                            binding.appBar.orderListView.dashboard.noData.visibility = View.VISIBLE
+                        } else {
+                            binding.appBar.orderListView.dashboard.noData.visibility = View.GONE
+                        }
+                        if (orderList.status!!) {
+                            renderOrders(orderList.result?.orders!!)
+                        }
+
                     } else {
                         Intent(
                             this@HomeActivity,
@@ -208,15 +222,17 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             finish()
                         }
                     }
-
                 }
-            }
 
-            override fun onFailure(call: Call<Order>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
+                override fun onFailure(call: Call<Order>, t: Throwable) {
+                    TODO("Not yet implemented")
+                }
 
-        })
+            })
+        } catch (e: Exception) {
+            Log.d("Exception", "Something went wrong getting order")
+        }
+
     }
 
     private fun renderOrders(orders: ArrayList<Order.Result.Orders>) {
@@ -280,10 +296,10 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 startActivity(logout)
                 finish()
             }
-            R.id.submit_decline->{
+            R.id.submit_decline -> {
                 var editText = bottomSheetDialog.findViewById<EditText>(R.id.reason)
-                if(!validateField())return
-                Log.d("Reason",orderId)
+                if (!validateField()) return
+                Log.d("Reason", orderId)
                 updateOrderStatus(token, orderId, "declined", editText?.text?.trim().toString())
                 orderData.riderStatus = "declined"
                 binding.appBar.orderListView.dashboard.orderList.adapter?.notifyDataSetChanged()
@@ -291,6 +307,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         }
     }
+
     private fun validateField(): Boolean {
         var editText = bottomSheetDialog.findViewById<EditText>(R.id.reason)
         if (editText?.text.toString().trim().isEmpty()) {

@@ -189,15 +189,16 @@
                         android:layout_marginBottom="@dimen/ten"
                         android:orientation="horizontal">
                         <ImageView
+                            android:id="@+id/uploaded_image"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="@dimen/hundred"
-                            android:src="@drawable/gift"/>
+                            android:src="@drawable/logo"/>
                         <ImageView
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="@dimen/hundred"
-                            android:src="@drawable/gift"/>
+                            android:src="@drawable/logo"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.cardview.widget.CardView>

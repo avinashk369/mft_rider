@@ -48,7 +48,7 @@ class OrderAdapter(
             .override(600, 600)
             .fitCenter()
             .centerCrop()
-            .error(R.drawable.gift)
+            .error(R.drawable.logo)
             .into(holder.imageView);
         // sets the text to the textview from our itemHolder class
         holder.delAddress.text = order.address

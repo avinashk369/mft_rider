@@ -13,11 +13,13 @@ import com.techcamino.mft_rider.R
 import com.techcamino.mft_rider.apis.ApiClient
 import com.techcamino.mft_rider.apis.ApiInterface
 import com.techcamino.mft_rider.databinding.ActivityOtpBinding
+import com.techcamino.mft_rider.models.MessageDetail
 import com.techcamino.mft_rider.models.UserModel
 import com.techcamino.mft_rider.utils.ProgressDialog
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
+import kotlin.Exception
 
 class OtpActivity : BaseActivity(), View.OnClickListener {
     private lateinit var binding: ActivityOtpBinding
@@ -74,56 +76,70 @@ class OtpActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun checkLogin(mobile: String, otp: String) {
-        dialog.show()
-       val riderLogin =
-            apiService.checkLogin(mobile, otp)
-        riderLogin.enqueue(object : retrofit2.Callback<UserModel> {
-            override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
-                if (response.isSuccessful) {
-                    val userModel: UserModel = response.body()!!
-                    if (userModel.status) {
-                        binding.verify.visibility=View.GONE
-                        val edit = shared.edit()
-                        edit.putString(
-                            this@OtpActivity.resources.getString(R.string.access_token),
-                            userModel.result.token
-                        )
-                        edit.putString(
-                            "mobile",
-                            userModel.result.mobile
-                        )
-                        edit.putString(
-                            this@OtpActivity.resources.getString(R.string.user_name),
-                            userModel.result.name
-                        )
+        try {
+            dialog.show()
+            val riderLogin =
+                apiService.checkLogin(mobile, otp)
+            riderLogin.enqueue(object : retrofit2.Callback<UserModel> {
+                override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
+                    if (response.isSuccessful) {
+                        val userModel: UserModel = response.body()!!
+                        if (userModel.status) {
+                            binding.verify.visibility = View.GONE
+                            val edit = shared.edit()
+                            edit.putString(
+                                this@OtpActivity.resources.getString(R.string.access_token),
+                                userModel.result.token
+                            )
+                            edit.putString(
+                                "mobile",
+                                userModel.result.mobile
+                            )
+                            edit.putString(
+                                this@OtpActivity.resources.getString(R.string.user_name),
+                                userModel.result.name
+                            )
 //                        Toast.makeText(this@OtpActivity, userModel.result.token, Toast.LENGTH_SHORT)
 //                            .show()
-                        edit.apply()
-                        Intent(this@OtpActivity, HomeActivity::class.java).apply {
-                            putExtra("mobile",userModel.result.mobile)
-                            putExtra("name",userModel.result.name)
-                        }.also {
-                            startActivity(it)
-                            finish()
+                            edit.apply()
+                            Intent(this@OtpActivity, HomeActivity::class.java).apply {
+                                putExtra("mobile", userModel.result.mobile)
+                                putExtra("name", userModel.result.name)
+                            }.also {
+                                startActivity(it)
+                                finish()
+                            }
+                        } else {
+
                         }
                     } else {
-                        binding.verify.visibility=View.VISIBLE
-                        binding.verify.text =userModel.result.error.otp
-                        Log.d("error",userModel.result.error.otp)
-                    }
-                } else {
-                    Log.d("failed", response.errorBody()!!.toString())
-                }
-                if (dialog.isShowing)
-                    dialog.dismiss()
-            }
+                        Log.d("failed", response.errorBody()!!.toString())
+                        try {
+                            var messageDetails = gson.fromJson(
+                                response.errorBody()!!.charStream(),
+                                MessageDetail::class.java
+                            )
+                            binding.verify.visibility = View.VISIBLE
+                            binding.verify.text = messageDetails.result.error.otp
+                            Log.d("error", messageDetails.result.error.otp)
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace();
+                        }
 
-            override fun onFailure(call: Call<UserModel>, t: Throwable) {
-                Log.d("Success", t.toString())
-                if (dialog.isShowing)
-                    dialog.dismiss()
-            }
-        })
+                    }
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                }
+
+                override fun onFailure(call: Call<UserModel>, t: Throwable) {
+                    Log.d("Success", t.toString())
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                }
+            })
+        } catch (e: Exception) {
+            Log.d("Exception", "Authorization failed")
+        }
 
     }
 }
