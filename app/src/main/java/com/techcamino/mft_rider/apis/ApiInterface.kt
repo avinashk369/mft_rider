@@ -9,8 +9,13 @@ import com.techcamino.mft_rider.models.orders.OrderHistory
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
+import java.io.File
 
 interface ApiInterface {
+
+    @POST("riderapp/api/checkRider")
+    @FormUrlEncoded
+    fun checkRider(@Field("mobile") mobile: String): Call<MessageDetail>
 
     @POST("riderapp/api/loginRider")
     @FormUrlEncoded
@@ -41,6 +46,16 @@ interface ApiInterface {
         @Field("order_id") orderId: String,
         @Field("pickup_status") pickupStatus: String,
         @Field("reason") reason: String,
+    ): Call<MessageDetail>
+
+    @POST("riderapp/api/imageUpload")
+    @Multipart
+    fun uploadImage(
+        @Header("Authorization") toke: String,
+        @Field("order_id") orderId: String,
+        @Part("images") imageUrl: File,
+        @Field("products") products: Array<Int>,
+        @Field("suborders") suborders: Array<Int>,
     ): Call<MessageDetail>
 
     @GET("/quotesss")

@@ -106,7 +106,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onStart() {
         token = shared.getString(this@HomeActivity.resources.getString(R.string.access_token), "")!!
         // call api to get orders
-        getOrders(token, "All")
+        getOrders(token, "pending_orders")
         // get all order history
         getOrderHistory(token)
         super.onStart()
@@ -225,7 +225,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
 
                 override fun onFailure(call: Call<Order>, t: Throwable) {
-                    TODO("Not yet implemented")
+                    Log.d("On Failure","Something went wrong")
                 }
 
             })
@@ -300,8 +300,8 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 var editText = bottomSheetDialog.findViewById<EditText>(R.id.reason)
                 if (!validateField()) return
                 Log.d("Reason", orderId)
-                updateOrderStatus(token, orderId, "declined", editText?.text?.trim().toString())
-                orderData.riderStatus = "declined"
+                updateOrderStatus(token, orderId, "decline", editText?.text?.trim().toString())
+                orderData.riderStatus = "declined_orders"
                 binding.appBar.orderListView.dashboard.orderList.adapter?.notifyDataSetChanged()
                 bottomSheetDialog.dismiss()
             }
@@ -333,13 +333,13 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun changeState(order: Order.Result.Orders, status: Boolean) {
         orderId = order.orderId!!
         orderData = order
-        if (status && order.riderStatus?.lowercase() != "accepted") {
+        if (status && order.riderStatus?.lowercase() != "accepted_orders") {
             Log.d("state", "Order accepted $status")
-            updateOrderStatus(token, order.orderId!!, "accepted", "Accepted")
-            order.riderStatus = "accepted"
+            updateOrderStatus(token, order.orderId!!, "accept", "Accepted")
+            order.riderStatus = "accepted_orders"
             binding.appBar.orderListView.dashboard.orderList.adapter?.notifyDataSetChanged()
         }
-        if (!status && order.riderStatus?.lowercase() != "declined") {
+        if (!status && order.riderStatus?.lowercase() != "declined_orders") {
             Log.d("state", "Order declined $status")
             showBottomSheetDialog()
         }

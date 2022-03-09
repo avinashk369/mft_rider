@@ -6,6 +6,6 @@ data class MessageDetail(
     var result: Result
     ){
     data class Result(val error:ErrorModel){
-        data class ErrorModel(var otp:String)
+        data class ErrorModel(var otp:String,var mobile:String)
     }
 }

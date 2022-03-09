@@ -3,7 +3,7 @@
     <style name="Theme.MFT_RIDER" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/peach</item>
+        <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnPrimary">@color/white</item>

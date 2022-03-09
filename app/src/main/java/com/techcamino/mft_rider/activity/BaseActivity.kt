@@ -212,7 +212,7 @@ abstract class BaseActivity : AppCompatActivity() {
             ), subAlbumName
         )
         if (!file?.mkdirs()) {
-            Log.e("rename", "Directory not created")
+            Log.e("mft_rider", "Directory not created")
         }
 
         return file
@@ -246,7 +246,7 @@ abstract class BaseActivity : AppCompatActivity() {
         var bitmap = image
         try {
 
-            val file = createImageFile("rename","xxx")
+            val file = createImageFile("mft_rider","xxx")
             val outputStream = BufferedOutputStream(FileOutputStream(file))
 
 
@@ -312,11 +312,11 @@ abstract class BaseActivity : AppCompatActivity() {
         mimeType = "image/*"
         var bitmap: Bitmap = image
         val values = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, getNewFileName("rename"))
+            put(MediaStore.Images.Media.DISPLAY_NAME, getNewFileName("mft_rider"))
             put(MediaStore.Images.Media.MIME_TYPE, mimeType)
             put(
                 MediaStore.Images.Media.RELATIVE_PATH,
-                getImageDirectoryPath("rename")
+                getImageDirectoryPath("mft_rider")
             )
         }
         val imageUri =
@@ -382,12 +382,8 @@ abstract class BaseActivity : AppCompatActivity() {
         val file = File(currentPhotoPath)
         MediaScannerConnection.scanFile(this, arrayOf(file.absolutePath),
             null, MediaScannerConnection.OnScanCompletedListener { path, uri ->
-                Log.i("ExternalStorage", "Scanned " + path + ":");
-                Log.i("ExternalStorage", "-> uri=" + uri);
+                Log.i("ExternalStorage", "Scanned $path:");
+                Log.i("ExternalStorage", "-> uri=$uri");
             })
     }
-
-
-
-
 }

@@ -56,13 +56,13 @@ class OrderAdapter(
         holder.delMethod.text=order.shippingmethod
 
         when (order.riderStatus?.lowercase()) {
-            "accepted" -> {
+            "accepted_orders" -> {
                 holder.viewMap.visibility = View.VISIBLE
                 holder.decline.visibility = View.GONE
                 holder.acptText.text = context.resources.getString(R.string.accepted)
 
             }
-            "declined" -> {
+            "declined_orders" -> {
                 holder.decText.text = context.resources.getString(R.string.declined)
 
             }

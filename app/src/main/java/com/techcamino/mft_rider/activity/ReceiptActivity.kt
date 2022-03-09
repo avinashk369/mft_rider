@@ -9,14 +9,11 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -26,12 +23,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.techcamino.mft_rider.R
 import com.techcamino.mft_rider.apis.ApiClient
 import com.techcamino.mft_rider.apis.ApiInterface
-import com.techcamino.mft_rider.databinding.ActivityHomeBinding
 import com.techcamino.mft_rider.databinding.ActivityReceiptBinding
+import com.techcamino.mft_rider.models.MessageDetail
 import com.techcamino.mft_rider.models.orders.Order
 import com.techcamino.mft_rider.models.orders.OrderDetail
 import com.techcamino.mft_rider.permissionUtils.OnActivityResultListener
@@ -42,10 +38,8 @@ import retrofit2.Response
 import java.io.File
 import java.io.IOException
 
-import java.lang.Exception
 
-
-class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultListener {
+class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultListener {
     private lateinit var binding: ActivityReceiptBinding
     lateinit var shared: SharedPreferences
     lateinit var apiService: ApiInterface
@@ -57,7 +51,7 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
     private lateinit var resultLauncher: ActivityResultLauncher<Intent>
     private lateinit var resultLauncher1: ActivityResultLauncher<Intent>
     private var pictureFilePath: String? = null
-    private var imageName:String?=null
+    private var imageName: String? = null
     private val MY_PERMISSIONS_REQUEST_CAMERA = 99
     private val MY_PERMISSIONS_REQUEST_STORAGE = 88
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,18 +98,23 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
                 }
             }
         // this is for setting intent result capture
-        resultLauncher1 = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                print("success")
+        resultLauncher1 =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    print("success")
+                }
             }
-        }
     }
 
     // check permission
-    private fun checkPermissions(permission:kotlin.String, requestCode:Int){
-        if(ContextCompat.checkSelfPermission(this,permission)!= PackageManager.PERMISSION_GRANTED){
+    private fun checkPermissions(permission: kotlin.String, requestCode: Int) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
 
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this,permission)){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
@@ -123,7 +122,7 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
                     .setTitle("Required Camera Permission")
                     .setMessage("You have to give this permission to access camera")
                     .setPositiveButton("OK",
-                        DialogInterface.OnClickListener { dialogInterface, i ->
+                        DialogInterface.OnClickListener { _, i ->
                             ActivityCompat.requestPermissions(
                                 this, arrayOf(Manifest.permission.CAMERA),
                                 MY_PERMISSIONS_REQUEST_CAMERA
@@ -133,38 +132,39 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
                         DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() })
                     .create()
                     .show()
-            }else{
+            } else {
                 // take permission
-                ActivityCompat.requestPermissions(this, arrayOf(permission),requestCode)
+                ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
 
             }
-        }else{
-            //openCamera(editText.text.toString().trim(),binding.panchayatName.text.toString())
-            if(this.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)){
+        } else {
+
+            if (this.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
                 clickPhoto(REQUEST_IMAGE_CAPTURE_WITHOUT_SCALE)
-            }else{
-                Toast.makeText(this,"No camera available on this device.", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "No camera available on this device.", Toast.LENGTH_LONG)
+                    .show()
             }
             //Toast.makeText(this,"Permission already granted", Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun getPictureFile(fileName:kotlin.String,dirName:kotlin.String): File {
+    private fun getPictureFile(fileName: kotlin.String, dirName: kotlin.String): File {
         val diren = this.resources.getString(R.string.app_name)
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val imagePath = File(storageDir, diren)
         Log.d("avinash", "Find " + imagePath.absolutePath)
-        if (! imagePath.exists()){
-            if (! imagePath.mkdirs()){
+        if (!imagePath.exists()) {
+            if (!imagePath.mkdirs()) {
                 Log.d("CameraTestIntent", "failed to create directory");
 
-            }else{
-                Log.d("tag","create new Tux folder");
+            } else {
+                Log.d("tag", "create new Tux folder");
             }
         }
-        val regNumberHint = order?.orderId
-        val image = File(imagePath, "$regNumberHint$fileName.jpg")
-        Log.d("image path",image.absolutePath)
+        val imageName = order?.orderId
+        val image = File(imagePath, "$imageName$fileName.jpg")
+        Log.d("image path", image.absolutePath)
 
         pictureFilePath = image.absolutePath
 
@@ -174,13 +174,13 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
 
     private fun handleCameraImage(intent: Intent?) {
         val spl = pictureFilePath?.split("/")
-        val da = spl?.get(spl?.size-1)
+        val da = spl?.get(spl?.size - 1)
         val imgFile = File(pictureFilePath)
 
         print(imgFile.absolutePath.toString())
-        Log.d("Avinash kumar",imgFile.absolutePath)
+        Log.d("Avinash kumar", imgFile.absolutePath)
         val splitted = imgFile.absolutePath.split("/")
-        binding.uploadedImage.visibility=View.VISIBLE
+        binding.uploadedImage.visibility = View.VISIBLE
         Glide.with(this).load(imgFile).into(binding.uploadedImage)
 //        val bitmap = intent?.extras?.get("data") as Bitmap
     }
@@ -189,13 +189,13 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
     /**
      * testing image capture
      */
-    fun clickPhoto(requestCode: Int) {
+    private fun clickPhoto(requestCode: Int) {
 
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         takePictureIntent.resolveActivity(packageManager)?.also {
             // Create the File where the photo should go
             val photoFile: File? = try {
-                createImageFile(this.resources.getString(R.string.app_name),order?.orderId!!)
+                createImageFile(this.resources.getString(R.string.app_name), order?.orderId!!)
             } catch (ex: IOException) {
                 Toast.makeText(this, "${ex.message}", Toast.LENGTH_LONG).show()
                 null
@@ -220,18 +220,21 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    Log.d("into if",photoURI.toString())
+                    Log.d("into if", photoURI.toString())
                 } else {
 
                     val imageUri =
-                        contentResolver.insert(MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL), values)
-                    Log.d("into elese",photoFile.toString())
+                        contentResolver.insert(
+                            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
+                            values
+                        )
+                    Log.d("into elese", photoFile.toString())
                     if (imageUri != null) {
                         currentPhotoPath = imageUri.toString()
                         shareUri = imageUri
                     }
                     val splitted = photoFile.toString().split("/")
-                    imageName = splitted[splitted.size-1]
+                    imageName = splitted[splitted.size - 1]
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
                 }
                 initRequestCode(takePictureIntent, requestCode)
@@ -250,7 +253,7 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
         result: ActivityResult,
         currentRequestCode: Int
     ) {
-        Log.d("testing file name",currentPhotoPath)
+        Log.d("testing file name", currentPhotoPath)
         if (currentRequestCode == REQUEST_IMAGE_CAPTURE_WITHOUT_SCALE) {
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
@@ -262,29 +265,29 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
                 )
                 //binding.imageView.load(currentPhotoPath)
                 val splitted = currentPhotoPath.split("/")
-                binding.uploadedImage.visibility=View.VISIBLE
+                binding.uploadedImage.visibility = View.VISIBLE
                 Glide.with(this).load(currentPhotoPath).into(binding.uploadedImage)
             } else {
                 var image: Bitmap = getBitmapFromContentResolver(Uri.parse(currentPhotoPath))
-                Log.d("image path",currentPhotoPath)
+                Log.d("image path", currentPhotoPath)
                 // binding.imageView.load(currentPhotoPath)
                 val splitted = currentPhotoPath.split("/")
-                binding.uploadedImage.visibility=View.VISIBLE
+                binding.uploadedImage.visibility = View.VISIBLE
                 Glide.with(this).load(currentPhotoPath).into(binding.uploadedImage)
             }
-            //to show image in gallery
-            addImageInGallery()
+            //uploadImage(token,order?.orderId!!,File(currentPhotoPath), arrayOf(4464), arrayOf(81592501))
         }
 
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.delivered_btn->{
-                checkPermissions(Manifest.permission.CAMERA ,MY_PERMISSIONS_REQUEST_CAMERA)
+            R.id.delivered_btn -> {
+                checkPermissions(Manifest.permission.CAMERA, MY_PERMISSIONS_REQUEST_CAMERA)
             }
         }
     }
+
     override fun onStart() {
         supportActionBar?.title = "#${order?.orderId}"
         getOrderDetail(token, order?.orderId!!)
@@ -331,5 +334,43 @@ class ReceiptActivity : BaseActivity(),View.OnClickListener, OnActivityResultLis
             if (orderInfo.shippingAlternateTelephone?.lowercase() == ("null")) "" else orderInfo.shippingAlternateTelephone
         binding.recAddress.text = orderInfo.shippingAddress1
         binding.addressType.text = orderInfo.shippingAddressType
+    }
+
+    private fun uploadImage(
+        token: String,
+        orderId: String,
+        imageUrl: File,
+        product: Array<Int>,
+        suborders: Array<Int>
+    ) {
+        try {
+            dialog.show()
+            Log.d("uploading","uploading image started")
+            var upload =
+                apiService.uploadImage("Bearer $token", orderId, imageUrl, product, suborders)
+            upload.enqueue(object : Callback<MessageDetail> {
+                override fun onResponse(
+                    call: Call<MessageDetail>,
+                    response: Response<MessageDetail>
+                ) {
+                   if(response.isSuccessful){
+                       Log.d("Success","Image uploaded")
+                   }else{
+                       Log.d("Failed","Image not uploaded")
+                   }
+                    if(dialog.isShowing)
+                        dialog.dismiss()
+                }
+
+                override fun onFailure(call: Call<MessageDetail>, t: Throwable) {
+                    Log.d("OnFailure","Image not uploaded")
+                    if(dialog.isShowing)
+                        dialog.dismiss()
+                }
+            })
+        } catch (e: Exception) {
+            e.stackTrace
+            Log.d("Exception", "Image upload failed")
+        }
     }
 }
