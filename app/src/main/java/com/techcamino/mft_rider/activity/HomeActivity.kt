@@ -22,6 +22,7 @@ import android.graphics.Typeface
 import android.util.Log
 import android.view.Gravity
 import android.view.Menu
+import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.techcamino.mft_rider.adapters.OrderAdapter
 import com.techcamino.mft_rider.models.orders.Order
@@ -33,6 +34,11 @@ import retrofit2.Response
 import androidx.core.view.MenuItemCompat
 
 import android.widget.TextView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.techcamino.mft_rider.models.MessageDetail
 import com.techcamino.mft_rider.models.orders.Data
 
 
@@ -44,7 +50,10 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     lateinit var phoneNumber: String
     lateinit var name: String
     lateinit var dialog: Dialog
+    lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var token: String
+    private lateinit var orderId:String
+    private lateinit var orderData: Order.Result.Orders
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -82,9 +91,9 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val headerView = binding.navView.getHeaderView(0)
 
         // get user name and email textViews
-       val userName = headerView.findViewById<View>(R.id.user_name) as TextView
-       val mobileNumber = headerView.findViewById<View>(R.id.mobile) as TextView
-        userName.text=name
+        val userName = headerView.findViewById<View>(R.id.user_name) as TextView
+        val mobileNumber = headerView.findViewById<View>(R.id.mobile) as TextView
+        userName.text = name
         mobileNumber.text = phoneNumber
 
 //        appIcon = headerView.findViewById<View>(R.id.imageView)
@@ -97,22 +106,22 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onStart() {
         token = shared.getString(this@HomeActivity.resources.getString(R.string.access_token), "")!!
         // call api to get orders
-        getOrders(token,"All")
+        getOrders(token, "All")
         // get all order history
         getOrderHistory(token)
         super.onStart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main,menu)
-        val menuItem:MenuItem= menu!!.findItem(R.id.action_cart)
+        menuInflater.inflate(R.menu.main, menu)
+        val menuItem: MenuItem = menu!!.findItem(R.id.action_cart)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.action_cart->{
-                Log.d("Shopping cart","Shopping cart items")
+        when (item.itemId) {
+            R.id.action_cart -> {
+                Log.d("Shopping cart", "Shopping cart items")
             }
         }
         return super.onOptionsItemSelected(item)
@@ -172,24 +181,25 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             (binding.navView.menu.findItem(R.id.all).actionView) as TextView
         all.gravity = Gravity.CENTER_VERTICAL
         all.setTypeface(null, Typeface.BOLD)
-        all.text = (orderHistory.acceptedOrders!!+orderHistory.pendingOrders!!+orderHistory.deliveredOrders!!).toString()
+        all.text =
+            (orderHistory.acceptedOrders!! + orderHistory.pendingOrders!! + orderHistory.deliveredOrders!!).toString()
     }
 
-    private fun getOrders(token: String,type:String) {
+    private fun getOrders(token: String, type: String) {
         val orders = apiService.getAllOrders("Bearer $token", type, "1")
         orders.enqueue(object : Callback<Order> {
             override fun onResponse(call: Call<Order>, response: Response<Order>) {
                 if (response.isSuccessful) {
                     val orderList: Order = response.body()!!
                     Log.d("order limit", orderList.result?.orders?.size.toString())
-                    if(orderList.result?.orders?.isEmpty()!!){
-                        binding.appBar.orderListView.dashboard.noData.visibility=View.VISIBLE
-                    }else{
-                        binding.appBar.orderListView.dashboard.noData.visibility=View.GONE
+                    if (orderList.result?.orders?.isEmpty()!!) {
+                        binding.appBar.orderListView.dashboard.noData.visibility = View.VISIBLE
+                    } else {
+                        binding.appBar.orderListView.dashboard.noData.visibility = View.GONE
                     }
                     if (orderList.status!!) {
                         renderOrders(orderList.result?.orders!!)
-                    }else{
+                    } else {
                         Intent(
                             this@HomeActivity,
                             LoginActivity::class.java
@@ -239,22 +249,22 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.delivered->{
+        when (item.itemId) {
+            R.id.delivered -> {
                 Log.d("menu", "Deleivered")
-                getOrders(token,"delivered_orders")
+                getOrders(token, "delivered_orders")
             }
-            R.id.accepted->{
+            R.id.accepted -> {
                 Log.d("menu", "accepted")
-                getOrders(token,"accepted_orders")
+                getOrders(token, "accepted_orders")
             }
-            R.id.pending->{
+            R.id.pending -> {
                 Log.d("menu", "pending")
-                getOrders(token,"pending_orders")
+                getOrders(token, "pending_orders")
             }
-            R.id.all->{
+            R.id.all -> {
                 Log.d("menu", "All")
-                getOrders(token,"all")
+                getOrders(token, "all")
             }
 
         }
@@ -270,7 +280,25 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 startActivity(logout)
                 finish()
             }
+            R.id.submit_decline->{
+                var editText = bottomSheetDialog.findViewById<EditText>(R.id.reason)
+                if(!validateField())return
+                Log.d("Reason",orderId)
+                updateOrderStatus(token, orderId, "declined", editText?.text?.trim().toString())
+                orderData.riderStatus = "declined"
+                binding.appBar.orderListView.dashboard.orderList.adapter?.notifyDataSetChanged()
+                bottomSheetDialog.dismiss()
+            }
         }
+    }
+    private fun validateField(): Boolean {
+        var editText = bottomSheetDialog.findViewById<EditText>(R.id.reason)
+        if (editText?.text.toString().trim().isEmpty()) {
+            editText?.error = "Please enter a valid reason"
+            editText?.requestFocus()
+            return false
+        }
+        return true
     }
 
     override fun onItemClick(order: Order.Result.Orders) {
@@ -286,15 +314,22 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun changeState(order: Order.Result.Orders, status: Boolean) {
-        if (status) {
+        orderId = order.orderId!!
+        orderData = order
+        if (status && order.riderStatus?.lowercase() != "accepted") {
             Log.d("state", "Order accepted $status")
-        } else {
-            Log.d("state", "Order decline $status")
+            updateOrderStatus(token, order.orderId!!, "accepted", "Accepted")
+            order.riderStatus = "accepted"
+            binding.appBar.orderListView.dashboard.orderList.adapter?.notifyDataSetChanged()
+        }
+        if (!status && order.riderStatus?.lowercase() != "declined") {
+            Log.d("state", "Order declined $status")
+            showBottomSheetDialog()
         }
     }
 
     override fun viewMap(order: Order.Result.Orders) {
-        Log.d("Map","Show map")
+        Log.d("Map", "Show map")
 //        Intent(
 //            this@HomeActivity,
 //            MapActivity::class.java
@@ -303,5 +338,64 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 //        }.also {
 //            startActivity(it)
 //        }
+    }
+
+    private fun updateOrderStatus(token: String, orderId: String, status: String, reason: String) {
+        try {
+            dialog.show()
+            val orderStatus = apiService.updateOrderStatus("Bearer $token", orderId, status, reason)
+            orderStatus.enqueue(object : Callback<MessageDetail> {
+                override fun onResponse(
+                    call: Call<MessageDetail>,
+                    response: Response<MessageDetail>
+                ) {
+                    if (response.isSuccessful) {
+                        if (response.body()!!.status) {
+                            Toast.makeText(
+                                this@HomeActivity,
+                                response.body()!!.message,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+
+                        }
+                    }
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                }
+
+                override fun onFailure(call: Call<MessageDetail>, t: Throwable) {
+                    Log.d("Exception", "Something wrong with api")
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                }
+            })
+        } catch (e: Exception) {
+
+        }
+
+    }
+
+    override fun onResume() {
+        Log.d("resume", "Onresume")
+        super.onResume()
+    }
+
+    override fun onRestart() {
+        Log.d("restart", "Onrestart")
+        super.onRestart()
+    }
+
+    private fun showBottomSheetDialog() {
+        val dialogView: View = layoutInflater.inflate(R.layout.bottom_sheet, null)
+
+        bottomSheetDialog = BottomSheetDialog(this, R.style.BottomSheetDialogTheme)
+        bottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        bottomSheetDialog.setCancelable(true)
+        bottomSheetDialog.setContentView(dialogView)
+        bottomSheetDialog.show()
+        val submit = bottomSheetDialog.findViewById<CardView>(R.id.submit_decline)
+        submit!!.setOnClickListener(this)
     }
 }

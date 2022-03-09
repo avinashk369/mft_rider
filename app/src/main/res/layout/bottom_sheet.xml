@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/twenty"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/ten"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <View
+        android:id="@+id/dummy"
+        android:layout_width="@dimen/fifty"
+        android:layout_height="@dimen/radius"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/capsule"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/reason"
+        android:textColorHint="@color/black"
+        android:textSize="@dimen/twenty"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dummy" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/reasonCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/twenty"
+        android:layout_marginTop="@dimen/thirty"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="@dimen/radius"
+        app:cardElevation="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/twelve"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/reason"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/hundred_twenty"
+                android:layout_marginStart="@dimen/radius"
+                android:layout_marginLeft="@dimen/radius"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/reason"
+                android:inputType="textMultiLine"
+                android:maxLines="3"
+                android:textColor="@color/black"
+                android:textColorHint="@color/hint_color" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/submit_decline"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="@dimen/fourty"
+        android:layout_marginStart="@dimen/ten"
+        android:layout_marginEnd="@dimen/ten"
+        android:layout_marginTop="@dimen/twenty"
+        app:cardBackgroundColor="@color/green"
+        app:cardCornerRadius="@dimen/radius"
+        app:cardElevation="0dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reasonCard"
+        app:layout_constraintWidth_percent=".5">
+
+        <TextView
+            android:id="@+id/view_map_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|center_vertical|center_horizontal"
+            android:text="@string/btn_decline"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.techcamino.mft_rider.apis
 
+import com.techcamino.mft_rider.models.MessageDetail
 import com.techcamino.mft_rider.models.UserModel
 import com.techcamino.mft_rider.models.orders.Data
 import com.techcamino.mft_rider.models.orders.Order
@@ -32,6 +33,15 @@ interface ApiInterface {
         @Header("Authorization") toke: String,
         @Field("order_id") orderId: String,
     ): Call<OrderDetail>
+
+    @POST("riderapp/api/orderPickUp")
+    @FormUrlEncoded
+    fun updateOrderStatus(
+        @Header("Authorization") toke: String,
+        @Field("order_id") orderId: String,
+        @Field("pickup_status") pickupStatus: String,
+        @Field("reason") reason: String,
+    ): Call<MessageDetail>
 
     @GET("/quotesss")
     fun getQuotes(): Call<UserModel>

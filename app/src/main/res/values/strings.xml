@@ -46,6 +46,7 @@
 
 
     <string name="no_data">No data found</string>
+    <string name="reason">Please enter reason</string>
 
 
 </resources>
