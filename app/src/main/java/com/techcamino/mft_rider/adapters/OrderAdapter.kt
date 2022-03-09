@@ -21,7 +21,8 @@ class OrderAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(order: Order.Result.Orders)
-        fun changeState(order: Order.Result.Orders,status:Boolean)
+        fun changeState(order: Order.Result.Orders, status: Boolean)
+        fun viewMap(order: Order.Result.Orders)
     }
 
     // create new views
@@ -39,25 +40,39 @@ class OrderAdapter(
 
         val order = mList[position]
 
+
         // sets the image to the imageview from our itemHolder class
         //holder.imageView.setImageResource(order.images[0])
         Glide.with(context)
-            .load("https://picsum.photos/200")
+            .load(order.images[0])
             .override(600, 600)
             .fitCenter()
             .centerCrop()
+            .error(R.drawable.gift)
             .into(holder.imageView);
         // sets the text to the textview from our itemHolder class
         holder.delAddress.text = order.address
         holder.orderId.text = "#${order.orderId}"
-        if(order.riderStatus?.lowercase() == "accepted"){
-            holder.viewMap.visibility=View.VISIBLE
-            holder.decline.visibility=View.GONE
-        }else{
-            holder.viewMap.visibility=View.GONE
-            holder.decline.visibility=View.VISIBLE
+        holder.delMethod.text=order.shippingmethod
+
+        when (order.riderStatus?.lowercase()) {
+            "accepted" -> {
+                holder.viewMap.visibility = View.VISIBLE
+                holder.decline.visibility = View.GONE
+                holder.acptText.text = context.resources.getString(R.string.accepted)
+
+            }
+            "declined" -> {
+                holder.decText.text = context.resources.getString(R.string.declined)
+
+            }
+            else -> {
+                holder.viewMap.visibility = View.GONE
+                holder.decline.visibility = View.VISIBLE
+            }
+
         }
-        holder.bind(order,itemClickListener)
+        holder.bind(order, itemClickListener)
 
     }
 
@@ -71,13 +86,29 @@ class OrderAdapter(
         val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val delAddress: TextView = itemView.findViewById(R.id.del_address)
         val orderId: TextView = itemView.findViewById(R.id.order_id)
+        val decText: TextView = itemView.findViewById(R.id.dec_text)
+        val delMethod: TextView = itemView.findViewById(R.id.del_method)
+        val acptText: TextView = itemView.findViewById(R.id.acpt_text)
         val decline: CardView = itemView.findViewById(R.id.decline_btn)
         val accept: CardView = itemView.findViewById(R.id.accept_btn)
         val viewMap: CardView = itemView.findViewById(R.id.view_map)
         fun bind(item: Order.Result.Orders, listener: OnItemClickListener) {
             itemView.setOnClickListener { listener.onItemClick(item) }
-            decline.setOnClickListener{ listener.changeState(item,false)}
-            accept.setOnClickListener{ listener.changeState(item,true)}
+            //if (item.riderStatus?.lowercase() != "declined")
+            decline.setOnClickListener {
+                listener.changeState(
+                    item,
+                    false
+                )
+            }
+            //if (item.riderStatus?.lowercase() != "accepted")
+            accept.setOnClickListener {
+                listener.changeState(
+                    item,
+                    true
+                )
+            }
+            viewMap.setOnClickListener { listener.viewMap(item) }
         }
     }
 }

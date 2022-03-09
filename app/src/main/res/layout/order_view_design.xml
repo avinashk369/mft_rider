@@ -15,7 +15,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
-            android:layout_width="@dimen/hundred"
+            android:layout_width="@dimen/hundred_twenty"
             android:layout_height="match_parent"
             app:cardCornerRadius="@dimen/radius"
             app:cardElevation="0dp"
@@ -33,15 +33,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
             <TextView
-                android:id="@+id/del_address"
+                android:id="@+id/del_method"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="15dp"
                 android:text="Item"
                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/del_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="15dp"
+                android:text="Item" />
             <TextView
                 android:id="@+id/order_id"
                 android:layout_width="wrap_content"
@@ -51,6 +57,7 @@
                 android:layout_marginTop="@dimen/radius"
                 android:text="Item" />
             <androidx.cardview.widget.CardView
+                android:visibility="gone"
                 android:id="@+id/km_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -103,6 +110,7 @@
                     app:cardElevation="0dp">
 
                     <TextView
+                        android:id="@+id/dec_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center|center_vertical|center_horizontal"
@@ -123,6 +131,7 @@
                     app:cardElevation="0dp">
 
                     <TextView
+                        android:id="@+id/view_map_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center|center_vertical|center_horizontal"
@@ -142,6 +151,7 @@
                     app:cardElevation="0dp">
 
                     <TextView
+                        android:id="@+id/acpt_text"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center|center_vertical|center_horizontal"

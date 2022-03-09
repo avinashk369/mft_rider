@@ -3,6 +3,7 @@
     <!-- Login Screen -->
     <string name="login_title">Logistic login to my flower tree</string>
     <string name="phone_number">Phone number</string>
+    <string name="user_name">User name</string>
     <string name="btn_continue">Continue</string>
     <string name="need_help">Need help?</string>
     <string name="call_us">Call us at</string>
@@ -12,6 +13,7 @@
 
     <!-- Otp Screen -->
     <string name="otp_title">Please enter 6 digit pin</string>
+    <string name="otp">OTP</string>
 
     <string name="in_km">in KM</string>
     <string name="btn_decline">Decline</string>
@@ -22,12 +24,28 @@
     <string name="delivered">Delivered</string>
     <string name="accepted_order">Accepted Order</string>
     <string name="pending_order">Pending Order</string>
+    <string name="all">All</string>
 
 
     <string name="delivery_address">Delivery Address</string>
     <string name="cart">Cart</string>
     <string name="upload_image">Upload Image</string>
     <string name="mark_delivered">Mark As Delivered</string>
+    <string name="accepted">Accepted</string>
+    <string name="declined">Declined</string>
+
+    <string name="map_key">AIzaSyDEKaoUFAop3hQl68Kh127oFsaEJ88JTlg</string>
+
+    <!-- shipping detail screen -->
+    <string name="recipient_name">Recipient Name</string>
+    <string name="delivery_city">Delivery City</string>
+    <string name="recipient_number">Recipient Number</string>
+    <string name="recipient_alt_number">Recipient Alternate Number</string>
+    <string name="recipient_address">Recipient Address</string>
+    <string name="address_type">Address Type</string>
+
+
+    <string name="no_data">No data found</string>
 
 
 </resources>

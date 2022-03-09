@@ -17,4 +17,8 @@
         android:id="@+id/pending"
         app:actionViewClass="android.widget.TextView"
         android:title="@string/pending_order" />
+    <item
+        android:id="@+id/all"
+        app:actionViewClass="android.widget.TextView"
+        android:title="@string/all" />
 </menu>

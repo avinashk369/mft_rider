@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
     lateinit var shared: SharedPreferences
     private lateinit var token: String
+    private lateinit var mobile: String
+    private lateinit var name: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,6 +27,10 @@ class SplashActivity : AppCompatActivity() {
             )
         token =
             shared.getString(this@SplashActivity.resources.getString(R.string.access_token), "")!!
+        mobile =
+            shared.getString("mobile", "")!!
+        name =
+            shared.getString(this@SplashActivity.resources.getString(R.string.user_name), "")!!
 
         lifecycleScope.launch {
             delay(3000L)
@@ -33,7 +39,8 @@ class SplashActivity : AppCompatActivity() {
                     this@SplashActivity,
                     HomeActivity::class.java
                 ).apply {
-                    putExtra("name", "Avinash")
+                    putExtra("mobile",mobile)
+                    putExtra("name",name)
                 }.also {
                     startActivity(it)
                     finish()

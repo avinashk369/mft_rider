@@ -13,6 +13,9 @@
         android:theme="@style/Theme.MFT_RIDER"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activity.MapActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ReceiptActivity"
             android:exported="false" />
         <activity
@@ -39,6 +42,10 @@
         <activity
             android:name=".activity.MainActivity"
             android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key" />
     </application>
 
 </manifest>

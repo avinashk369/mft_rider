@@ -15,7 +15,11 @@ import com.techcamino.mft_rider.apis.ApiInterface
 import com.techcamino.mft_rider.databinding.ActivityHomeBinding
 import com.techcamino.mft_rider.databinding.ActivityReceiptBinding
 import com.techcamino.mft_rider.models.orders.Order
+import com.techcamino.mft_rider.models.orders.OrderDetail
 import com.techcamino.mft_rider.utils.ProgressDialog
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 import java.lang.Exception
 
@@ -63,6 +67,7 @@ class ReceiptActivity : BaseActivity() {
 
     override fun onStart() {
         supportActionBar?.title = "#${order?.orderId}"
+        getOrderDetail(token, order?.orderId!!)
         super.onStart()
     }
 
@@ -77,5 +82,34 @@ class ReceiptActivity : BaseActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return super.onSupportNavigateUp()
+    }
+
+    private fun getOrderDetail(token: String, orderId: String) {
+        val orderDetail = apiService.getOrderDetail("Bearer $token", orderId)
+        orderDetail.enqueue(object : Callback<OrderDetail> {
+            override fun onResponse(call: Call<OrderDetail>, response: Response<OrderDetail>) {
+                if (response.isSuccessful) {
+                    if (response.body()?.status!!) {
+                        renderDetail(response.body()?.result?.orderInfo!!)
+                    }
+                    Log.d("data getting", response.body()?.result?.orderInfo?.shippingCity!!)
+                }
+            }
+
+            override fun onFailure(call: Call<OrderDetail>, t: Throwable) {
+                Log.d("data getting", "failed")
+            }
+
+        })
+    }
+
+    private fun renderDetail(orderInfo: OrderDetail.Result.OrderInfo) {
+        binding.recName.text = orderInfo.shippingFirstname
+        binding.delCity.text = orderInfo.shippingCity
+        binding.recNum.text = orderInfo.shippingTelephone
+        binding.altNum.text =
+            if (orderInfo.shippingAlternateTelephone?.lowercase() == ("null")) "" else orderInfo.shippingAlternateTelephone
+        binding.recAddress.text = orderInfo.shippingAddress1
+        binding.addressType.text = orderInfo.shippingAddressType
     }
 }

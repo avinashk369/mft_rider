@@ -84,7 +84,7 @@
                         android:layout_marginStart="@dimen/radius"
                         android:layout_marginLeft="@dimen/radius"
                         android:background="@null"
-                        android:hint="@string/phone_number"
+                        android:hint="@string/otp"
                         android:inputType="phone"
                         android:maxLength="6"
                         android:maxLines="1"

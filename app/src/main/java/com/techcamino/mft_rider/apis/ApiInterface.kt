@@ -3,6 +3,7 @@ package com.techcamino.mft_rider.apis
 import com.techcamino.mft_rider.models.UserModel
 import com.techcamino.mft_rider.models.orders.Data
 import com.techcamino.mft_rider.models.orders.Order
+import com.techcamino.mft_rider.models.orders.OrderDetail
 import com.techcamino.mft_rider.models.orders.OrderHistory
 import retrofit2.Call
 import retrofit2.Response
@@ -24,6 +25,13 @@ interface ApiInterface {
         @Field("type") type: String,
         @Field("page") page: String,
     ): Call<Order>
+
+    @POST("riderapp/api/orderDetail")
+    @FormUrlEncoded
+    fun getOrderDetail(
+        @Header("Authorization") toke: String,
+        @Field("order_id") orderId: String,
+    ): Call<OrderDetail>
 
     @GET("/quotesss")
     fun getQuotes(): Call<UserModel>

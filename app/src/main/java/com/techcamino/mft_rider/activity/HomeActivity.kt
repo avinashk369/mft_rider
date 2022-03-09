@@ -42,6 +42,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     lateinit var shared: SharedPreferences
     lateinit var apiService: ApiInterface
     lateinit var phoneNumber: String
+    lateinit var name: String
     lateinit var dialog: Dialog
     private lateinit var token: String
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +50,8 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         dialog = ProgressDialog.progressDialog(this)
-//        phoneNumber = intent.getStringExtra("mobile")!!
+        phoneNumber = intent.getStringExtra("mobile")!!
+        name = intent.getStringExtra("name")!!
 //        Log.d("phonenumber", phoneNumber)
 
         apiService = ApiClient.apiInterface
@@ -79,14 +81,12 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding.logoutLayout.setOnClickListener(this)
         val headerView = binding.navView.getHeaderView(0)
 
-
-
         // get user name and email textViews
+       val userName = headerView.findViewById<View>(R.id.user_name) as TextView
+       val mobileNumber = headerView.findViewById<View>(R.id.mobile) as TextView
+        userName.text=name
+        mobileNumber.text = phoneNumber
 
-
-        // get user name and email textViews
-//        userName = headerView.findViewById<View>(R.id.user_name)
-//        mobileNumber = headerView.findViewById<View>(R.id.mobile)
 //        appIcon = headerView.findViewById<View>(R.id.imageView)
 //        Glide.with(context).load(Constants.APP_ICON_URL)
 //            .thumbnail(.5f)
@@ -97,7 +97,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onStart() {
         token = shared.getString(this@HomeActivity.resources.getString(R.string.access_token), "")!!
         // call api to get orders
-        getOrders(token)
+        getOrders(token,"All")
         // get all order history
         getOrderHistory(token)
         super.onStart()
@@ -154,7 +154,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             (binding.navView.menu.findItem(R.id.delivered).actionView) as TextView
         item.gravity = Gravity.CENTER_VERTICAL
         item.setTypeface(null, Typeface.BOLD)
-        item.text = orderHistory.acceptedOrders.toString()
+        item.text = orderHistory.deliveredOrders.toString()
         // pending order
         val pending =
             (binding.navView.menu.findItem(R.id.pending).actionView) as TextView
@@ -167,17 +167,36 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         accepted.gravity = Gravity.CENTER_VERTICAL
         accepted.setTypeface(null, Typeface.BOLD)
         accepted.text = orderHistory.acceptedOrders.toString()
+        // all order
+        val all =
+            (binding.navView.menu.findItem(R.id.all).actionView) as TextView
+        all.gravity = Gravity.CENTER_VERTICAL
+        all.setTypeface(null, Typeface.BOLD)
+        all.text = (orderHistory.acceptedOrders!!+orderHistory.pendingOrders!!+orderHistory.deliveredOrders!!).toString()
     }
 
-    private fun getOrders(token: String) {
-        val orders = apiService.getAllOrders("Bearer $token", "All", "1")
+    private fun getOrders(token: String,type:String) {
+        val orders = apiService.getAllOrders("Bearer $token", type, "1")
         orders.enqueue(object : Callback<Order> {
             override fun onResponse(call: Call<Order>, response: Response<Order>) {
                 if (response.isSuccessful) {
                     val orderList: Order = response.body()!!
                     Log.d("order limit", orderList.result?.orders?.size.toString())
+                    if(orderList.result?.orders?.isEmpty()!!){
+                        binding.appBar.orderListView.dashboard.noData.visibility=View.VISIBLE
+                    }else{
+                        binding.appBar.orderListView.dashboard.noData.visibility=View.GONE
+                    }
                     if (orderList.status!!) {
                         renderOrders(orderList.result?.orders!!)
+                    }else{
+                        Intent(
+                            this@HomeActivity,
+                            LoginActivity::class.java
+                        ).also {
+                            startActivity(it)
+                            finish()
+                        }
                     }
 
                 }
@@ -220,16 +239,25 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-//       if (id == R.id.nav_wish_list) {
-//            val wishList = Intent(context, WishList::class.java)
-//            wishList.putExtra(Constants.USER, userDetails)
-//            startActivity(wishList)
-//        } else if (id == R.id.nav_order_history) {
-//            val orderHistory = Intent(context, OrderHistory::class.java)
-//            orderHistory.putExtra(Constants.USER, userDetails)
-//            startActivity(orderHistory)
-//        }
+        when(item.itemId){
+            R.id.delivered->{
+                Log.d("menu", "Deleivered")
+                getOrders(token,"delivered_orders")
+            }
+            R.id.accepted->{
+                Log.d("menu", "accepted")
+                getOrders(token,"accepted_orders")
+            }
+            R.id.pending->{
+                Log.d("menu", "pending")
+                getOrders(token,"pending_orders")
+            }
+            R.id.all->{
+                Log.d("menu", "All")
+                getOrders(token,"all")
+            }
+
+        }
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
@@ -263,5 +291,17 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         } else {
             Log.d("state", "Order decline $status")
         }
+    }
+
+    override fun viewMap(order: Order.Result.Orders) {
+        Log.d("Map","Show map")
+//        Intent(
+//            this@HomeActivity,
+//            MapActivity::class.java
+//        ).apply {
+//            putExtra("order", order)
+//        }.also {
+//            startActivity(it)
+//        }
     }
 }

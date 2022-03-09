@@ -88,11 +88,20 @@ class OtpActivity : BaseActivity(), View.OnClickListener {
                             this@OtpActivity.resources.getString(R.string.access_token),
                             userModel.result.token
                         )
-                        Toast.makeText(this@OtpActivity, userModel.result.token, Toast.LENGTH_SHORT)
-                            .show()
+                        edit.putString(
+                            "mobile",
+                            userModel.result.mobile
+                        )
+                        edit.putString(
+                            this@OtpActivity.resources.getString(R.string.user_name),
+                            userModel.result.name
+                        )
+//                        Toast.makeText(this@OtpActivity, userModel.result.token, Toast.LENGTH_SHORT)
+//                            .show()
                         edit.apply()
                         Intent(this@OtpActivity, HomeActivity::class.java).apply {
-                             putExtra("mobile",userModel.result.mobile)
+                            putExtra("mobile",userModel.result.mobile)
+                            putExtra("name",userModel.result.name)
                         }.also {
                             startActivity(it)
                             finish()
