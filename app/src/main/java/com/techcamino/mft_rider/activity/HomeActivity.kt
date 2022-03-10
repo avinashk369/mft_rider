@@ -351,14 +351,14 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun viewMap(order: Order.Result.Orders) {
         Log.d("Map", "Show map")
-//        Intent(
-//            this@HomeActivity,
-//            MapActivity::class.java
-//        ).apply {
-//            putExtra("order", order)
-//        }.also {
-//            startActivity(it)
-//        }
+        Intent(
+            this@HomeActivity,
+            MapActivity::class.java
+        ).apply {
+            putExtra("order", order)
+        }.also {
+            startActivity(it)
+        }
     }
 
     private fun updateOrderStatus(token: String, orderId: String, status: String, reason: String) {
