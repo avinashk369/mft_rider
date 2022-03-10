@@ -1,12 +1,10 @@
 package com.techcamino.mft_rider.activity
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,8 +14,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -35,14 +31,13 @@ import com.techcamino.mft_rider.models.orders.OrderDetail
 import com.techcamino.mft_rider.permissionUtils.OnActivityResultListener
 import com.techcamino.mft_rider.utils.ProgressDialog
 import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 import java.io.IOException
-import okhttp3.MultipartBody
-
-import okhttp3.RequestBody
 
 
 class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultListener,
@@ -246,10 +241,8 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
             uploadImage(
                 token,
-                order?.orderId!!,
-                File(pictureFilePath!!),
-                intArrayOf(4464),
-                intArrayOf(81592501)
+                subOrder?.subOrderId!!,
+                File(pictureFilePath!!)
             )
         }
 
@@ -258,7 +251,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.delivered_btn -> {
-
+                markDelivered(token, order?.orderId!!)
             }
         }
     }
@@ -325,32 +318,55 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         binding.addressType.text = orderInfo.shippingAddressType
     }
 
+    private fun markDelivered(token: String, orderId: String) {
+        try {
+            dialog.show()
+            val markDeliver = apiService.markDelevered("Bearer $token", orderId)
+            markDeliver.enqueue(object : Callback<MessageDetail> {
+                override fun onResponse(
+                    call: Call<MessageDetail>,
+                    response: Response<MessageDetail>
+                ) {
+                    if (response.isSuccessful) {
+                        Log.d("Order delivered", "Order delivered")
+                    }
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                }
+
+                override fun onFailure(call: Call<MessageDetail>, t: Throwable) {
+                    Log.d("Failed", "Something went wrong")
+                    if (dialog.isShowing)
+                        dialog.dismiss()
+                }
+
+            })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
     private fun uploadImage(
         token: String,
         orderId: String,
-        imageUrl: File,
-        product: IntArray,
-        suborders: IntArray
+        imageUrl: File
     ) {
         try {
             dialog.show()
             Log.d("uploading", "uploading image started ${imageUrl.name}")
-
             // Parsing any Media type file
-
             // Parsing any Media type file
             val builder = MultipartBody.Builder()
             builder.setType(MultipartBody.FORM)
 
-            builder.addFormDataPart("order_id", orderId)
-            builder.addFormDataPart("products", "4464")
-            builder.addFormDataPart("suborders", "81592501")
+            builder.addFormDataPart("sub_order_id", orderId)
 
             // Map is used to multipart the file using okhttp3.RequestBody
             // Multiple Images
 
             builder.addFormDataPart(
-                "images[]",
+                "images",
                 imageUrl.name,
                 RequestBody.create(MediaType.parse("multipart/form-data"), imageUrl)
             )

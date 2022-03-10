@@ -49,11 +49,16 @@ interface ApiInterface {
         @Field("reason") reason: String,
     ): Call<MessageDetail>
 
-    @POST("riderapp/api/orderDelivered")
+    @POST("riderapp/api/imageUpload")
     fun uploadImage(
         @Header("Authorization") toke: String,
         @Body file: RequestBody
     ): Call<MessageDetail>
+
+    @POST("riderapp/api/orderDelivered")
+    @FormUrlEncoded
+    fun markDelevered( @Header("Authorization") toke: String,
+    @Field("order_id") orderId:String ):Call<MessageDetail>
 
     @GET("/quotesss")
     fun getQuotes(): Call<UserModel>
