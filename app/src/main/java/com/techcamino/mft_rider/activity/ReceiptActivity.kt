@@ -233,7 +233,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         if (currentRequestCode == REQUEST_IMAGE_CAPTURE_WITHOUT_SCALE) {
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-                var file = File(pictureFilePath!!)
+                val file = File(pictureFilePath!!)
                 shareUri = FileProvider.getUriForFile(
                     this,
                     "techcamino.mft_rider.provider",
@@ -243,10 +243,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                 binding.uploadedImage.visibility = View.VISIBLE
                 Glide.with(this).load(pictureFilePath).into(binding.uploadedImage)
             } else {
-                var image: Bitmap = getBitmapFromContentResolver(Uri.parse(pictureFilePath))
-                Log.d("image path", pictureFilePath!!)
-                // binding.imageView.load(pictureFilePath)
-                val splitted = pictureFilePath!!.split("/")
+
                 binding.uploadedImage.visibility = View.VISIBLE
                 Glide.with(this).load(pictureFilePath).into(binding.uploadedImage)
             }
@@ -254,7 +251,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             uploadImage(
                 token,
                 order?.orderId!!,
-                File(pictureFilePath),
+                File(pictureFilePath!!),
                 intArrayOf(4464),
                 intArrayOf(81592501)
             )
@@ -349,22 +346,22 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             val builder = MultipartBody.Builder()
             builder.setType(MultipartBody.FORM)
 
-            builder.addFormDataPart("owner_id", order?.orderId!!)
-            //builder.addFormDataPart("products", product.toString())
-            builder.addFormDataPart("owner_type", "1")
+            builder.addFormDataPart("order_id", orderId)
+            builder.addFormDataPart("products", "4464")
+            builder.addFormDataPart("suborders", "81592501")
 
             // Map is used to multipart the file using okhttp3.RequestBody
             // Multiple Images
 
             builder.addFormDataPart(
-                "image_url",
+                "images[]",
                 imageUrl.name,
                 RequestBody.create(MediaType.parse("multipart/form-data"), imageUrl)
             )
 
             val requestBody = builder.build()
 
-            var upload =
+            val upload =
                 apiService.uploadImage("Bearer $token", requestBody)
             upload.enqueue(object : Callback<MessageDetail> {
                 override fun onResponse(

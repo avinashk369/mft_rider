@@ -49,7 +49,7 @@ interface ApiInterface {
         @Field("reason") reason: String,
     ): Call<MessageDetail>
 
-    @POST("http://192.168.43.170:8888/tda_app/api/image/test")
+    @POST("riderapp/api/orderDelivered")
     fun uploadImage(
         @Header("Authorization") toke: String,
         @Body file: RequestBody

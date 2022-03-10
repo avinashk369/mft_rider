@@ -106,7 +106,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onStart() {
         token = shared.getString(this@HomeActivity.resources.getString(R.string.access_token), "")!!
         // call api to get orders
-        getOrders(token, "pending_orders")
+        getOrders(token, "all")
         // get all order history
         getOrderHistory(token)
         super.onStart()
@@ -169,7 +169,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    private fun setMenuItemVal(orderHistory: OrderHistory): Unit {
+    private fun setMenuItemVal(orderHistory: OrderHistory) {
         val item =
             (binding.navView.menu.findItem(R.id.delivered).actionView) as TextView
         item.gravity = Gravity.CENTER_VERTICAL
@@ -297,7 +297,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 finish()
             }
             R.id.submit_decline -> {
-                var editText = bottomSheetDialog.findViewById<EditText>(R.id.reason)
+                val editText = bottomSheetDialog.findViewById<EditText>(R.id.reason)
                 if (!validateField()) return
                 Log.d("Reason", orderId)
                 updateOrderStatus(token, orderId, "decline", editText?.text?.trim().toString())
@@ -309,7 +309,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     private fun validateField(): Boolean {
-        var editText = bottomSheetDialog.findViewById<EditText>(R.id.reason)
+        val editText = bottomSheetDialog.findViewById<EditText>(R.id.reason)
         if (editText?.text.toString().trim().isEmpty()) {
             editText?.error = "Please enter a valid reason"
             editText?.requestFocus()
