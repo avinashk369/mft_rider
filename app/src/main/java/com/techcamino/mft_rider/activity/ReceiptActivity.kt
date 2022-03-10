@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -255,16 +256,8 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             R.id.delivered_btn -> {
                 if (imageUploaded) {
                     markDelivered(token, order?.orderId!!)
-                }else{
-                    Snackbar.make(
-                        findViewById(R.id.context_view),
-                        R.string.upload_image_first,
-                        Snackbar.LENGTH_INDEFINITE
-                    )
-                        .setAction("Ok", View.OnClickListener { // Request permission
-
-                        })
-                        .show()
+                } else {
+                    showSnack(R.string.upload_image_first)
                 }
             }
         }
@@ -344,6 +337,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                 ) {
                     if (response.isSuccessful) {
                         Log.d("Order delivered", "Order delivered")
+                        showSnack(R.string.order_delivered)
                     }
                     if (dialog.isShowing)
                         dialog.dismiss()
@@ -370,7 +364,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         try {
             dialog.show()
             Log.d("uploading", "uploading image started ${imageUrl.name}")
-            // Parsing any Media type file
+
             // Parsing any Media type file
             val builder = MultipartBody.Builder()
             builder.setType(MultipartBody.FORM)
@@ -398,13 +392,14 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     if (response.isSuccessful) {
                         imageUploaded = true
                         Log.d("Success", "Image uploaded")
+                        showSnack(R.string.upload_image_success)
                         Glide.with(this@ReceiptActivity).load(pictureFilePath)
                             .into(binding.uploadedImage)
                     } else {
                         imageUploaded = false
                         Log.d("Failed", "Image not uploaded")
                     }
-                    binding.deliveredBtn.isEnabled=imageUploaded
+                    binding.deliveredBtn.isEnabled = imageUploaded
                     if (dialog.isShowing)
                         dialog.dismiss()
                 }
@@ -421,6 +416,22 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                 dialog.dismiss()
             Log.d("Exception", "Image upload failed" + e.printStackTrace())
         }
+    }
+
+    private fun showSnack(message: Int) {
+        Snackbar.make(
+            findViewById(R.id.context_view),
+            message,
+            Snackbar.LENGTH_INDEFINITE
+        ).apply {
+            setActionTextColor(
+                Color.parseColor("#FFFFFF")
+            )
+        }
+            .setAction("Ok", View.OnClickListener { // Request permission
+
+            })
+            .show()
     }
 
     private fun renderSubOrders(orders: ArrayList<OrderDetail.Result.OrderInfo.Detail>) {

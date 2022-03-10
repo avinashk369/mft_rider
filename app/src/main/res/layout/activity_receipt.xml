@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize"
+        android:layout_marginBottom="@dimen/sixty"
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -223,7 +224,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/ten"
-                app:layout_constraintBottom_toTopOf="@+id/delivered_btn"
+                app:layout_constraintBottom_toTopOf="@+id/footer_card"
                 app:layout_constraintTop_toBottomOf="@+id/detail"
                 tools:listitem="@layout/suborder_view_design" />
 
@@ -237,19 +238,9 @@
                 android:textColor="@color/maroon"
                 android:textStyle="bold"
                 android:visibility="visible"
-                app:layout_constraintBottom_toTopOf="@+id/delivered_btn"
                 app:layout_constraintTop_toBottomOf="@+id/detail" />
 
-            <Button
-                android:id="@+id/delivered_btn"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/sixty"
-                android:layout_marginHorizontal="@dimen/fifteen"
-                android:text="@string/mark_delivered"
-                android:backgroundTint="@color/green"
-                app:layout_constraintBottom_toTopOf="@+id/footer_card"
-                app:layout_constraintTop_toBottomOf="@+id/suborders">
-            </Button>
+
 
             <RelativeLayout
                 android:id="@+id/footer_card"
@@ -295,5 +286,14 @@
             </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+    <Button
+        android:id="@+id/delivered_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sixty"
+        android:layout_marginHorizontal="@dimen/fifteen"
+        android:text="@string/mark_delivered"
+        android:backgroundTint="@color/green"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView">
+    </Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

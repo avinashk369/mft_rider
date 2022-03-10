@@ -18,6 +18,7 @@ import com.techcamino.mft_rider.utils.ProgressDialog
 import com.techcamino.mft_rider.models.orders.OrderHistory
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.util.Log
 import android.view.Gravity
@@ -38,6 +39,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.techcamino.mft_rider.models.MessageDetail
 import com.techcamino.mft_rider.models.orders.Data
 
@@ -133,6 +135,22 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun bindViewWithViewBinding(view: View) {
         binding = ActivityHomeBinding.bind(view)
+    }
+
+    private fun showSnack(message: Int) {
+        Snackbar.make(
+            binding.contextView,
+            message,
+            Snackbar.LENGTH_INDEFINITE
+        ).apply {
+            setActionTextColor(
+                Color.parseColor("#FFFFFF")
+            )
+        }
+            .setAction("Ok", View.OnClickListener { // Request permission
+
+            })
+            .show()
     }
 
     private fun getOrderHistory(token: String) {
@@ -372,6 +390,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 ) {
                     if (response.isSuccessful) {
                         if (response.body()!!.status) {
+                            showSnack(R.string.order_updated)
                             getOrderHistory(token)
 
                         } else {
