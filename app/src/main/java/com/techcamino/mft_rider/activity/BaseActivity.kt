@@ -121,7 +121,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     }
 
-    val requestMultiplePermissions =
+    private val requestMultiplePermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             var isDenied = 2
             permissions.entries.forEach {

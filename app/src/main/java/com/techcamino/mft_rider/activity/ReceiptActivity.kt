@@ -55,12 +55,8 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     private lateinit var token: String
     private var order: Order.Result.Orders? = null
     private var subOrder: OrderDetail.Result.OrderInfo.Detail? = null
-    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var resultLauncher1: ActivityResultLauncher<Intent>
     private var pictureFilePath: String? = null
-    private var imageName: String? = null
     private val MY_PERMISSIONS_REQUEST_CAMERA = 99
-    private val MY_PERMISSIONS_REQUEST_STORAGE = 88
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,22 +93,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         onActivityResultListener = this
         binding.deliveredBtn.setOnClickListener(this)
 
-        //result of open camera
-        // this is new way to handle intent
-        // onActivityResult is deprecated now
-        resultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    handleCameraImage(result.data)
-                }
-            }
-        // this is for setting intent result capture
-        resultLauncher1 =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    print("success")
-                }
-            }
+
     }
 
     // check permission
@@ -180,22 +161,6 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         return image
     }
 
-
-    private fun handleCameraImage(intent: Intent?) {
-        Log.d("handeling camer image", "here i am")
-        val spl = pictureFilePath?.split("/")
-        val da = spl?.get(spl?.size - 1)
-        val imgFile = File(pictureFilePath)
-
-        print(imgFile.absolutePath.toString())
-        Log.d("Avinash kumar", imgFile.absolutePath)
-        val splitted = imgFile.absolutePath.split("/")
-        binding.uploadedImage.visibility = View.VISIBLE
-        Glide.with(this).load(imgFile).into(binding.uploadedImage)
-//        val bitmap = intent?.extras?.get("data") as Bitmap
-    }
-
-
     /**
      * testing image capture
      */
@@ -203,10 +168,9 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         takePictureIntent.resolveActivity(packageManager)?.also {
-            getPictureFile(order?.orderId!!, "mft")
             // Create the File where the photo should go
             val photoFile: File? = try {
-                createImageFile(this.resources.getString(R.string.app_name), order?.orderId!!)
+                getPictureFile(order?.orderId!!, "mft")
             } catch (ex: IOException) {
                 Toast.makeText(this, "${ex.message}", Toast.LENGTH_LONG).show()
                 null
@@ -242,12 +206,11 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     Log.d("into elese", photoFile.toString())
                     if (imageUri != null) {
 
-                        currentPhotoPath = imageUri.toString()
+                        pictureFilePath = imageUri.toString()
                         shareUri = imageUri
                         Log.d("avinash", pictureFilePath!!)
                     }
-                    val splitted = photoFile.toString().split("/")
-                    imageName = splitted[splitted.size - 1]
+
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
                 }
                 initRequestCode(takePictureIntent, requestCode)
@@ -266,27 +229,26 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         result: ActivityResult,
         currentRequestCode: Int
     ) {
-        Log.d("testing file name", currentPhotoPath)
+        Log.d("testing file name", pictureFilePath!!)
         if (currentRequestCode == REQUEST_IMAGE_CAPTURE_WITHOUT_SCALE) {
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-                var file = File(currentPhotoPath)
+                var file = File(pictureFilePath!!)
                 shareUri = FileProvider.getUriForFile(
                     this,
                     "techcamino.mft_rider.provider",
                     file
                 )
-                //binding.imageView.load(currentPhotoPath)
-                val splitted = currentPhotoPath.split("/")
+
                 binding.uploadedImage.visibility = View.VISIBLE
-                Glide.with(this).load(currentPhotoPath).into(binding.uploadedImage)
+                Glide.with(this).load(pictureFilePath).into(binding.uploadedImage)
             } else {
-                var image: Bitmap = getBitmapFromContentResolver(Uri.parse(currentPhotoPath))
-                Log.d("image path", currentPhotoPath)
-                // binding.imageView.load(currentPhotoPath)
-                val splitted = currentPhotoPath.split("/")
+                var image: Bitmap = getBitmapFromContentResolver(Uri.parse(pictureFilePath))
+                Log.d("image path", pictureFilePath!!)
+                // binding.imageView.load(pictureFilePath)
+                val splitted = pictureFilePath!!.split("/")
                 binding.uploadedImage.visibility = View.VISIBLE
-                Glide.with(this).load(currentPhotoPath).into(binding.uploadedImage)
+                Glide.with(this).load(pictureFilePath).into(binding.uploadedImage)
             }
 
             uploadImage(

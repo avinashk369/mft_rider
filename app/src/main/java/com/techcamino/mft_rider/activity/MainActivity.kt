@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         apiService = ApiClient.apiInterface
         //getQuot()
-        riderLogin()
+        //riderLogin()
         dispatchTakePictureIntent()
 
     }
