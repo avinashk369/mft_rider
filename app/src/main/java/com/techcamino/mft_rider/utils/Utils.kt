@@ -8,7 +8,7 @@ import com.techcamino.mft_rider.R
 import java.text.DateFormat
 import java.util.*
 
-object Utils {
+internal object Utils {
     const val KEY_REQUESTING_LOCATION_UPDATES = "requesting_locaction_updates"
 
     /**

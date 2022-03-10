@@ -189,11 +189,11 @@ class LocationUpdatesService : Service() {
                notificationManager.notify(1, notificationBuilder.build());*/
             val builder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .addAction(
-                    R.drawable.ic_baseline_fiber_pin_24, getString(R.string.app_name),
+                    R.drawable.ic_baseline_launch_24, getString(R.string.app_name),
                     activityPendingIntent
                 )
                 .addAction(
-                    R.drawable.ic_baseline_arrow_back_ios_24, getString(R.string.phone_number),
+                    R.drawable.ic_baseline_cancel_24, getString(R.string.phone_number),
                     servicePendingIntent
                 )
                 .setContentText(text)
