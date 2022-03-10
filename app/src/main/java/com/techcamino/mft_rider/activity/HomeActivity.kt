@@ -225,7 +225,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
 
                 override fun onFailure(call: Call<Order>, t: Throwable) {
-                    Log.d("On Failure","Something went wrong")
+                    Log.d("On Failure", "Something went wrong")
                 }
 
             })
@@ -320,7 +320,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onItemClick(order: Order.Result.Orders) {
         Log.d("Order detail", order.address!!)
-        if(order.riderStatus?.lowercase() != "delivered_orders") {
+        if (order.riderStatus?.lowercase() == "accepted_orders") {
             Intent(
                 this@HomeActivity,
                 ReceiptActivity::class.java
@@ -335,8 +335,8 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun changeState(order: Order.Result.Orders, status: Boolean) {
         orderId = order.orderId!!
         orderData = order
-        if(order.riderStatus?.lowercase() != "delivered_orders") {
-            if (status && order.riderStatus?.lowercase() != "accepted_orders") {
+        if (order.riderStatus?.lowercase() != "delivered_orders") {
+            if (status && order.riderStatus?.lowercase() != "accepted_orders" && order.riderStatus?.lowercase() != "declined_orders") {
                 Log.d("state", "Order accepted $status")
                 updateOrderStatus(token, order.orderId!!, "accept", "Accepted")
                 order.riderStatus = "accepted_orders"
@@ -372,11 +372,8 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 ) {
                     if (response.isSuccessful) {
                         if (response.body()!!.status) {
-                            Toast.makeText(
-                                this@HomeActivity,
-                                response.body()!!.message,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            getOrderHistory(token)
+
                         } else {
 
                         }

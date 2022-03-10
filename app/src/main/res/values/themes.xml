@@ -16,7 +16,8 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <!-- system navigation bar color-->
-        <!--        <item name="android:navigationBarColor">@color/transparent</item>-->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">true</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -26,7 +27,8 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <!-- system navigation bar color-->
-        <!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
     <!--  End of splash theme -->
 

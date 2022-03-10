@@ -100,9 +100,9 @@
 
 
             <LinearLayout
+                android:id="@+id/action_row"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/ten"
                 android:layout_marginBottom="@dimen/three"
                 android:gravity="bottom"
                 android:orientation="horizontal">

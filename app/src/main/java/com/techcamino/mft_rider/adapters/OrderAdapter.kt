@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -67,6 +68,9 @@ class OrderAdapter(
                 holder.decText.text = context.resources.getString(R.string.declined)
 
             }
+            "delivered_orders"->{
+                holder.actionRow.visibility=View.GONE
+            }
             else -> {
                 holder.viewMap.visibility = View.GONE
                 holder.decline.visibility = View.VISIBLE
@@ -94,6 +98,7 @@ class OrderAdapter(
         val decline: CardView = itemView.findViewById(R.id.decline_btn)
         val accept: CardView = itemView.findViewById(R.id.accept_btn)
         val viewMap: CardView = itemView.findViewById(R.id.view_map)
+        val actionRow:LinearLayout = itemView.findViewById(R.id.action_row)
         fun bind(item: Order.Result.Orders, listener: OnItemClickListener) {
             itemView.setOnClickListener { listener.onItemClick(item) }
             //if (item.riderStatus?.lowercase() != "declined")
