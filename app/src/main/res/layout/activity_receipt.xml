@@ -9,8 +9,15 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
-
+    <View
+        android:id="@+id/context_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="parent" />
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?actionBarSize"
@@ -211,6 +218,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:visibility="visible"
                 android:id="@+id/suborders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -232,27 +240,16 @@
                 app:layout_constraintBottom_toTopOf="@+id/delivered_btn"
                 app:layout_constraintTop_toBottomOf="@+id/detail" />
 
-            <androidx.cardview.widget.CardView
+            <Button
                 android:id="@+id/delivered_btn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/sixty"
                 android:layout_marginHorizontal="@dimen/fifteen"
-                app:cardBackgroundColor="@color/green"
-                app:cardCornerRadius="@dimen/radius"
-                app:cardElevation="0dp"
+                android:text="@string/mark_delivered"
+                android:backgroundTint="@color/green"
                 app:layout_constraintBottom_toTopOf="@+id/footer_card"
                 app:layout_constraintTop_toBottomOf="@+id/suborders">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="@dimen/ten"
-                    android:gravity="center|center_vertical|center_horizontal"
-                    android:text="@string/mark_delivered"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/twenty"
-                    android:textStyle="bold" />
-            </androidx.cardview.widget.CardView>
+            </Button>
 
             <RelativeLayout
                 android:id="@+id/footer_card"

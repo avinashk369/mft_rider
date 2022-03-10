@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.techcamino.mft_rider.R
 import com.techcamino.mft_rider.adapters.SubOrderAdapter
 import com.techcamino.mft_rider.apis.ApiClient
@@ -52,6 +53,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     private var subOrder: OrderDetail.Result.OrderInfo.Detail? = null
     private var pictureFilePath: String? = null
     private val MY_PERMISSIONS_REQUEST_CAMERA = 99
+    private var imageUploaded: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -251,7 +253,19 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.delivered_btn -> {
-                markDelivered(token, order?.orderId!!)
+                if (imageUploaded) {
+                    markDelivered(token, order?.orderId!!)
+                }else{
+                    Snackbar.make(
+                        findViewById(R.id.context_view),
+                        R.string.upload_image_first,
+                        Snackbar.LENGTH_INDEFINITE
+                    )
+                        .setAction("Ok", View.OnClickListener { // Request permission
+
+                        })
+                        .show()
+                }
             }
         }
     }
@@ -259,6 +273,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     override fun onStart() {
         supportActionBar?.title = "#${order?.orderId}"
         getOrderDetail(token, order?.orderId!!)
+        //binding.deliveredBtn.isEnabled=imageUploaded
         super.onStart()
     }
 
@@ -381,12 +396,15 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     response: Response<MessageDetail>
                 ) {
                     if (response.isSuccessful) {
+                        imageUploaded = true
                         Log.d("Success", "Image uploaded")
                         Glide.with(this@ReceiptActivity).load(pictureFilePath)
                             .into(binding.uploadedImage)
                     } else {
+                        imageUploaded = false
                         Log.d("Failed", "Image not uploaded")
                     }
+                    binding.deliveredBtn.isEnabled=imageUploaded
                     if (dialog.isShowing)
                         dialog.dismiss()
                 }
@@ -399,6 +417,8 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             })
         } catch (e: Exception) {
             e.stackTrace
+            if (dialog.isShowing)
+                dialog.dismiss()
             Log.d("Exception", "Image upload failed" + e.printStackTrace())
         }
     }
