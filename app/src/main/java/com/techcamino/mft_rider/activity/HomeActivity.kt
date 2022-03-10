@@ -320,28 +320,32 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onItemClick(order: Order.Result.Orders) {
         Log.d("Order detail", order.address!!)
-        Intent(
-            this@HomeActivity,
-            ReceiptActivity::class.java
-        ).apply {
-            putExtra("order", order)
-        }.also {
-            startActivity(it)
+        if(order.riderStatus?.lowercase() != "delivered_orders") {
+            Intent(
+                this@HomeActivity,
+                ReceiptActivity::class.java
+            ).apply {
+                putExtra("order", order)
+            }.also {
+                startActivity(it)
+            }
         }
     }
 
     override fun changeState(order: Order.Result.Orders, status: Boolean) {
         orderId = order.orderId!!
         orderData = order
-        if (status && order.riderStatus?.lowercase() != "accepted_orders") {
-            Log.d("state", "Order accepted $status")
-            updateOrderStatus(token, order.orderId!!, "accept", "Accepted")
-            order.riderStatus = "accepted_orders"
-            binding.appBar.orderListView.dashboard.orderList.adapter?.notifyDataSetChanged()
-        }
-        if (!status && order.riderStatus?.lowercase() != "declined_orders") {
-            Log.d("state", "Order declined $status")
-            showBottomSheetDialog()
+        if(order.riderStatus?.lowercase() != "delivered_orders") {
+            if (status && order.riderStatus?.lowercase() != "accepted_orders") {
+                Log.d("state", "Order accepted $status")
+                updateOrderStatus(token, order.orderId!!, "accept", "Accepted")
+                order.riderStatus = "accepted_orders"
+                binding.appBar.orderListView.dashboard.orderList.adapter?.notifyDataSetChanged()
+            }
+            if (!status && order.riderStatus?.lowercase() != "declined_orders") {
+                Log.d("state", "Order declined $status")
+                showBottomSheetDialog()
+            }
         }
     }
 

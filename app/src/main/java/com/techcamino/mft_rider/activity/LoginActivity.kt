@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -49,6 +50,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         shared =
             getSharedPreferences(this.resources.getString(R.string.app_name), Context.MODE_PRIVATE)
         binding.loginBtn.setOnClickListener(this)
+        binding.helpNumber.setOnClickListener(this)
     }
 
     /**
@@ -71,6 +73,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 if (!validateField()) return
                 checkRider()
             }
+            R.id.help_number -> {
+                val num = this.resources.getString(R.string.help_number)
+                Intent(Intent.ACTION_DIAL).apply {
+                    data = Uri.parse("tel:$num")
+                }.also { startActivity(it) }
+            }
 
         }
     }
@@ -90,6 +98,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                             putExtra("mobile", binding.phoneNumber.text.trim().toString())
                         }.also {
                             startActivity(it)
+                            finish()
                         }
                     } else {
                         try {

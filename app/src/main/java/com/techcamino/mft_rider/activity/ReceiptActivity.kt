@@ -239,13 +239,9 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     "techcamino.mft_rider.provider",
                     file
                 )
-
-                binding.uploadedImage.visibility = View.VISIBLE
-                Glide.with(this).load(pictureFilePath).into(binding.uploadedImage)
             } else {
 
-                binding.uploadedImage.visibility = View.VISIBLE
-                Glide.with(this).load(pictureFilePath).into(binding.uploadedImage)
+
             }
 
             uploadImage(
@@ -370,6 +366,8 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                 ) {
                     if (response.isSuccessful) {
                         Log.d("Success", "Image uploaded")
+                        Glide.with(this@ReceiptActivity).load(pictureFilePath)
+                            .into(binding.uploadedImage)
                     } else {
                         Log.d("Failed", "Image not uploaded")
                     }
