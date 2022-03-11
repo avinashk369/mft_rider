@@ -24,7 +24,7 @@
             <ImageView
                 android:id="@+id/imageview"
                 android:layout_width="match_parent"
-                android:src="@drawable/gift"
+                android:src="@drawable/logo"
                 android:scaleType="fitXY"
                 android:layout_height="match_parent" />
         </androidx.cardview.widget.CardView>

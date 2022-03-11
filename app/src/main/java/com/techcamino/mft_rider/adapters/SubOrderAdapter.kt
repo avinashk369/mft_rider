@@ -1,6 +1,7 @@
 package com.techcamino.mft_rider.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,7 @@ class SubOrderAdapter(
 
 
     interface OnItemClickListener {
-        fun onItemClick(order: OrderDetail.Result.OrderInfo.Detail)
+        fun onItemClick(order: OrderDetail.Result.OrderInfo.Detail,image:ImageView)
     }
 
     // create new views
@@ -44,13 +45,19 @@ class SubOrderAdapter(
         //holder.imageView.setImageResource(order.images[0])
         Glide.with(context)
             .load(order.image)
-            .override(600, 600)
             .fitCenter()
             .centerCrop()
             .error(R.drawable.logo)
             .into(holder.imageView);
-        // sets the text to the textview from our itemHolder class
 
+        Log.d("Avinash", order.subOrderId!!)
+        // sets the text to the textview from our itemHolder class
+//        Glide.with(context)
+//            .load(order.image)
+//            .fitCenter()
+//            .centerCrop()
+//            .error(R.drawable.logo)
+//            .into(holder.uImageView)
         holder.orderId.text = "#${order.subOrderId}"
 
 
@@ -68,10 +75,11 @@ class SubOrderAdapter(
         val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val orderId: TextView = itemView.findViewById(R.id.suborder_id)
         val accept: CardView = itemView.findViewById(R.id.accept_btn)
+        val uImageView: ImageView = itemView.findViewById(R.id.suborder_image)
         fun bind(item: OrderDetail.Result.OrderInfo.Detail, listener: OnItemClickListener) {
             accept.setOnClickListener {
                 listener.onItemClick(
-                    item
+                    item,uImageView
                 )
             }
         }

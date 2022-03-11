@@ -13,26 +13,35 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            android:layout_width="@dimen/hundred_twenty"
-            android:layout_height="match_parent"
-            app:cardCornerRadius="@dimen/radius"
-            app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/peach">
+        <RelativeLayout
 
-            <ImageView
-                android:id="@+id/imageview"
-                android:layout_width="match_parent"
-                android:src="@drawable/gift"
-                android:scaleType="fitXY"
-                android:layout_height="match_parent" />
-        </androidx.cardview.widget.CardView>
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="@dimen/hundred_twenty"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/peach"
+                app:cardCornerRadius="@dimen/radius"
+                app:cardElevation="0dp">
+
+                <ImageView
+                    android:id="@+id/imageview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/logo" />
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/suborder_id"
                 android:layout_width="wrap_content"
@@ -40,34 +49,30 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="15dp"
                 android:text="Item"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/three"
                 android:gravity="bottom"
                 android:orientation="horizontal">
 
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/accept_btn"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="@dimen/fourty"
-                    android:layout_marginStart="@dimen/ten"
-                    android:layout_marginEnd="@dimen/ten"
-                    app:cardBackgroundColor="@color/maroon"
+                    android:layout_width="@dimen/hundred_twenty"
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="@color/peach"
                     app:cardCornerRadius="@dimen/radius"
                     app:cardElevation="0dp">
 
-                    <TextView
-                        android:id="@+id/acpt_text"
+                    <ImageView
+                        android:id="@+id/suborder_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center|center_vertical|center_horizontal"
-                        android:text="@string/btn_upload"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
+                        android:scaleType="fitXY"
+                        android:src="@drawable/logo" />
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
 

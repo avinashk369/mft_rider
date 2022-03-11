@@ -8,26 +8,33 @@
 
     <ImageView
         android:id="@+id/bg_logo"
-        android:layout_width="@dimen/hundred_twenty"
-        android:layout_height="@dimen/hundred"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/eighty"
         android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/bg_logo"
-        app:layout_constraintBottom_toTopOf="@+id/logo"
+        android:src="@drawable/myflowertree_logo"
+        app:layout_constraintBottom_toTopOf="@+id/logo_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/login_bg"
-        android:layout_marginBottom="@dimen/twenty_five"
+    <RelativeLayout
+        android:id="@+id/logo_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent=".4"
+        android:layout_marginBottom="@dimen/ten"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/flower"/>
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/relativeLayout"

@@ -74,7 +74,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         binding.appBar.toolbar.title = ""
         setSupportActionBar(binding.appBar.toolbar)
-        supportActionBar?.setIcon(R.drawable.bg)
+        supportActionBar?.setIcon(R.drawable.toolbar_icon)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayUseLogoEnabled(true)
 
@@ -114,20 +114,20 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onStart()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        val menuItem: MenuItem = menu!!.findItem(R.id.action_cart)
-        return super.onCreateOptionsMenu(menu)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.main, menu)
+//        val menuItem: MenuItem = menu!!.findItem(R.id.action_cart)
+//        return super.onCreateOptionsMenu(menu)
+//    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_cart -> {
-                Log.d("Shopping cart", "Shopping cart items")
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.action_cart -> {
+//                Log.d("Shopping cart", "Shopping cart items")
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     override fun findContentView(): Int {
         return R.layout.activity_home
@@ -141,7 +141,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         Snackbar.make(
             binding.contextView,
             message,
-            Snackbar.LENGTH_INDEFINITE
+            Snackbar.LENGTH_LONG
         ).apply {
             setActionTextColor(
                 Color.parseColor("#FFFFFF")
@@ -267,7 +267,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         // This will pass the ArrayList to our Adapter
         val adapter = OrderAdapter(orders, this@HomeActivity, this)
-
+        adapter.setHasStableIds(true)
         // Setting the Adapter with the recyclerview
         binding.appBar.orderListView.dashboard.orderList.adapter = adapter
     }

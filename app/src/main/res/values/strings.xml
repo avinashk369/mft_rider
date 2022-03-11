@@ -53,6 +53,7 @@
     <string name="order_updated">Order status updated successfully</string>
     <string name="order_accepted">Order has bee accepted</string>
     <string name="upload_image_success">Image uploaded successfully</string>
+    <string name="upload_image_failed">Image not uploaded</string>
     <string name="order_delivered">Order delivered successfully</string>
 
     <!-- Location resources -->

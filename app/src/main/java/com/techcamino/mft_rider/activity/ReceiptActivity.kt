@@ -13,6 +13,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.appcompat.widget.Toolbar
@@ -54,7 +55,8 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     private var subOrder: OrderDetail.Result.OrderInfo.Detail? = null
     private var pictureFilePath: String? = null
     private val MY_PERMISSIONS_REQUEST_CAMERA = 99
-    private var imageUploaded: Boolean = false
+    private var isDelivered: Boolean = false
+    private var imageView: ImageView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +92,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
         onActivityResultListener = this
         binding.deliveredBtn.setOnClickListener(this)
-
+        binding.helpNumber.setOnClickListener(this)
 
     }
 
@@ -228,6 +230,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         currentRequestCode: Int
     ) {
         Log.d("testing file name", pictureFilePath!!)
+
         if (currentRequestCode == REQUEST_IMAGE_CAPTURE_WITHOUT_SCALE) {
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
@@ -254,11 +257,17 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.delivered_btn -> {
-                if (imageUploaded) {
+                if (isDelivered) {
                     markDelivered(token, order?.orderId!!)
                 } else {
                     showSnack(R.string.upload_image_first)
                 }
+            }
+            R.id.help_number -> {
+                val num = this.resources.getString(R.string.help_number)
+                Intent(Intent.ACTION_DIAL).apply {
+                    data = Uri.parse("tel:$num")
+                }.also { startActivity(it) }
             }
         }
     }
@@ -336,9 +345,14 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     response: Response<MessageDetail>
                 ) {
                     if (response.isSuccessful) {
+                        isDelivered = false
+
                         Log.d("Order delivered", "Order delivered")
                         showSnack(R.string.order_delivered)
+                    } else {
+                        isDelivered = true
                     }
+                    binding.deliveredBtn.isEnabled=isDelivered
                     if (dialog.isShowing)
                         dialog.dismiss()
                 }
@@ -362,6 +376,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         imageUrl: File
     ) {
         try {
+
             dialog.show()
             Log.d("uploading", "uploading image started ${imageUrl.name}")
 
@@ -390,22 +405,20 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     response: Response<MessageDetail>
                 ) {
                     if (response.isSuccessful) {
-                        imageUploaded = true
-                        Log.d("Success", "Image uploaded")
+                        isDelivered = true
                         showSnack(R.string.upload_image_success)
-                        Glide.with(this@ReceiptActivity).load(pictureFilePath)
-                            .into(binding.uploadedImage)
                     } else {
-                        imageUploaded = false
+                        isDelivered = false
+                        showSnack(R.string.upload_image_failed)
                         Log.d("Failed", "Image not uploaded")
                     }
-                    binding.deliveredBtn.isEnabled = imageUploaded
                     if (dialog.isShowing)
                         dialog.dismiss()
                 }
 
                 override fun onFailure(call: Call<MessageDetail>, t: Throwable) {
                     Log.d("OnFailure", "Image not uploaded")
+                    showSnack(R.string.upload_image_failed)
                     if (dialog.isShowing)
                         dialog.dismiss()
                 }
@@ -422,7 +435,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         Snackbar.make(
             findViewById(R.id.context_view),
             message,
-            Snackbar.LENGTH_INDEFINITE
+            Snackbar.LENGTH_LONG
         ).apply {
             setActionTextColor(
                 Color.parseColor("#FFFFFF")
@@ -440,14 +453,15 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             LinearLayoutManager(this@ReceiptActivity)
         // This will pass the ArrayList to our Adapter
         val adapter = SubOrderAdapter(orders, this@ReceiptActivity, this)
-
+        adapter.setHasStableIds(true)
         // Setting the Adapter with the recyclerview
         binding.suborders.adapter = adapter
     }
 
-    override fun onItemClick(order: OrderDetail.Result.OrderInfo.Detail) {
+    override fun onItemClick(order: OrderDetail.Result.OrderInfo.Detail, uImageView: ImageView) {
         Log.d("Suborder", order.subOrderId!!)
         subOrder = order
+        imageView = uImageView
         checkPermissions(Manifest.permission.CAMERA, MY_PERMISSIONS_REQUEST_CAMERA)
     }
 }
