@@ -141,6 +141,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     }
 
     private fun getPictureFile(fileName: kotlin.String, dirName: kotlin.String): File {
+
         val diren = this.resources.getString(R.string.app_name)
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val imagePath = File(storageDir, diren)
@@ -153,7 +154,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                 Log.d("tag", "create new Tux folder");
             }
         }
-        val imageName = order?.orderId
+        val imageName = subOrder?.subOrderId
         val image = File(imagePath, "$imageName$fileName.jpg")
         Log.d("image path", image.absolutePath)
 
@@ -171,7 +172,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         takePictureIntent.resolveActivity(packageManager)?.also {
             // Create the File where the photo should go
             val photoFile: File? = try {
-                getPictureFile(order?.orderId!!, "mft")
+                getPictureFile(subOrder?.subOrderId!!, "mft")
             } catch (ex: IOException) {
                 Toast.makeText(this, "${ex.message}", Toast.LENGTH_LONG).show()
                 null
@@ -353,7 +354,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     } else {
                         isDelivered = true
                     }
-                    binding.deliveredBtn.isEnabled=isDelivered
+                    binding.deliveredBtn.isEnabled = isDelivered
                     if (dialog.isShowing)
                         dialog.dismiss()
                 }
@@ -408,9 +409,10 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     if (response.isSuccessful) {
                         isDelivered = true
                         showSnack(R.string.upload_image_success)
-                        subOrder?.upImage=pictureFilePath
+                        subOrder?.upImage = pictureFilePath
 
                         binding.suborders.adapter?.notifyDataSetChanged()
+
                     } else {
                         isDelivered = false
                         showSnack(R.string.upload_image_failed)
@@ -470,17 +472,17 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
     }
 
     override fun onPause() {
-        Log.d("pause","Into on pause")
+        Log.d("pause", "Into on pause")
         super.onPause()
     }
 
     override fun onRestart() {
-        Log.d("restart","into restart")
+        Log.d("restart", "into restart")
         super.onRestart()
     }
 
     override fun onResume() {
-        Log.d("resume","in resume")
+        Log.d("resume", "in resume")
         super.onResume()
     }
 }
