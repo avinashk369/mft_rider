@@ -72,7 +72,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
-                        android:src="@drawable/logo" />
+                        android:src="@drawable/ic_baseline_cloud_upload_24" />
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
 

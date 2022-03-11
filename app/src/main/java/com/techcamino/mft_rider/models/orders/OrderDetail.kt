@@ -30,6 +30,7 @@ data class OrderDetail(
                 @SerializedName("product_id") var productId: String? = null,
                 @SerializedName("sub_order_id") var subOrderId: String? = null,
                 @SerializedName("image") var image: String? = null,
+                var upImage: String? = null,
                 @SerializedName("vendorProImg") var vendorProImg: String? = null
 
             ) {

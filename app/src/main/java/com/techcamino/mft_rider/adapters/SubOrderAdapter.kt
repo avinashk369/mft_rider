@@ -52,12 +52,12 @@ class SubOrderAdapter(
 
         Log.d("Avinash", order.subOrderId!!)
         // sets the text to the textview from our itemHolder class
-//        Glide.with(context)
-//            .load(order.image)
-//            .fitCenter()
-//            .centerCrop()
-//            .error(R.drawable.logo)
-//            .into(holder.uImageView)
+        Glide.with(context)
+            .load(order.upImage)
+            .fitCenter()
+            .centerCrop()
+            .error(R.drawable.ic_baseline_cloud_upload_24)
+            .into(holder.uImageView)
         holder.orderId.text = "#${order.subOrderId}"
 
 

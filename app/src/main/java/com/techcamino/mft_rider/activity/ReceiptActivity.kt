@@ -93,6 +93,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         onActivityResultListener = this
         binding.deliveredBtn.setOnClickListener(this)
         binding.helpNumber.setOnClickListener(this)
+        getOrderDetail(token, order?.orderId!!)
 
     }
 
@@ -274,7 +275,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
     override fun onStart() {
         supportActionBar?.title = "#${order?.orderId}"
-        getOrderDetail(token, order?.orderId!!)
+
         //binding.deliveredBtn.isEnabled=imageUploaded
         super.onStart()
     }
@@ -407,6 +408,9 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     if (response.isSuccessful) {
                         isDelivered = true
                         showSnack(R.string.upload_image_success)
+                        subOrder?.upImage=pictureFilePath
+
+                        binding.suborders.adapter?.notifyDataSetChanged()
                     } else {
                         isDelivered = false
                         showSnack(R.string.upload_image_failed)
@@ -463,5 +467,20 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         subOrder = order
         imageView = uImageView
         checkPermissions(Manifest.permission.CAMERA, MY_PERMISSIONS_REQUEST_CAMERA)
+    }
+
+    override fun onPause() {
+        Log.d("pause","Into on pause")
+        super.onPause()
+    }
+
+    override fun onRestart() {
+        Log.d("restart","into restart")
+        super.onRestart()
+    }
+
+    override fun onResume() {
+        Log.d("resume","in resume")
+        super.onResume()
     }
 }
