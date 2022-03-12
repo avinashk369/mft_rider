@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.techcamino.mft_rider.R
-import com.techcamino.mft_rider.models.orders.Order
 import com.techcamino.mft_rider.models.orders.OrderDetail
 
 class SubOrderAdapter(
@@ -50,13 +50,19 @@ class SubOrderAdapter(
             .error(R.drawable.logo)
             .into(holder.imageView);
 
-        Log.d("Avinash", order.subOrderId!!)
+        if(order.upImage.isNullOrEmpty()){
+            holder.placeholder.visibility=View.VISIBLE
+            holder.accept.visibility=View.GONE
+        }else{
+            holder.placeholder.visibility=View.GONE
+            holder.accept.visibility=View.VISIBLE
+        }
         // sets the text to the textview from our itemHolder class
         Glide.with(context)
             .load(order.upImage)
             .fitCenter()
             .centerCrop()
-            .error(R.drawable.ic_baseline_cloud_upload_24)
+            .error(R.drawable.ic_baseline_camera_alt_24)
             .into(holder.uImageView)
         holder.orderId.text = "#${order.subOrderId}"
 
@@ -75,12 +81,16 @@ class SubOrderAdapter(
         val imageView: ImageView = itemView.findViewById(R.id.imageview)
         val orderId: TextView = itemView.findViewById(R.id.suborder_id)
         val accept: CardView = itemView.findViewById(R.id.accept_btn)
+        val placeholder: LinearLayout = itemView.findViewById(R.id.placeholder)
         val uImageView: ImageView = itemView.findViewById(R.id.suborder_image)
         fun bind(item: OrderDetail.Result.OrderInfo.Detail, listener: OnItemClickListener) {
             accept.setOnClickListener {
                 listener.onItemClick(
                     item,uImageView
                 )
+            }
+            placeholder.setOnClickListener{
+                listener.onItemClick(item,imageView)
             }
         }
     }

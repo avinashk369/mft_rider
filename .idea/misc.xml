@@ -10,7 +10,9 @@
         <entry key="app/src/main/res/drawable/bg.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable/bg_bottom_sheet_dialog_fragment.xml" value="0.1359375" />
         <entry key="app/src/main/res/drawable/bg_gradient.xml" value="0.13541666666666666" />
+        <entry key="app/src/main/res/drawable/border.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable/capsule.xml" value="0.25416666666666665" />
+        <entry key="app/src/main/res/drawable/ic_baseline_camera_alt_24.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable/ic_myflowertree_logo.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable/myflowertree_logo.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable/progress_bg.xml" value="0.1" />
@@ -32,8 +34,9 @@
         <entry key="app/src/main/res/layout/dashboard.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/nav_header_home.xml" value="0.22" />
         <entry key="app/src/main/res/layout/order_view_design.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/placeholder.xml" value="0.17980072463768115" />
         <entry key="app/src/main/res/layout/progress_dialog.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/suborder_view_design.xml" value="0.17980072463768115" />
+        <entry key="app/src/main/res/layout/suborder_view_design.xml" value="0.5" />
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/menu/activity_home_drawer.xml" value="0.23802083333333332" />
         <entry key="app/src/main/res/menu/main.xml" value="0.23802083333333332" />

@@ -409,7 +409,8 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     if (response.isSuccessful) {
                         isDelivered = true
                         showSnack(R.string.upload_image_success)
-                        subOrder?.upImage = pictureFilePath
+                        subOrder?.upImage = response.body()!!.result.vendorImage!!
+                        //subOrder?.upImage = pictureFilePath
 
                         binding.suborders.adapter?.notifyDataSetChanged()
 
