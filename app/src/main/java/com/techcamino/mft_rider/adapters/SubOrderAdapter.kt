@@ -44,6 +44,7 @@ class SubOrderAdapter(
         // sets the image to the imageview from our itemHolder class
         //holder.imageView.setImageResource(order.images[0])
         Glide.with(context)
+            .asBitmap()
             .load(order.image)
             .fitCenter()
             .centerCrop()
@@ -59,6 +60,7 @@ class SubOrderAdapter(
         }
         // sets the text to the textview from our itemHolder class
         Glide.with(context)
+            .asBitmap()
             .load(order.upImage)
             .fitCenter()
             .centerCrop()

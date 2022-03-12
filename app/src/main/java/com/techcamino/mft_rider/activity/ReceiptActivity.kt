@@ -5,7 +5,10 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,8 +23,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.exifinterface.media.ExifInterface
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils
 import com.google.android.material.snackbar.Snackbar
 import com.techcamino.mft_rider.R
 import com.techcamino.mft_rider.adapters.SubOrderAdapter
@@ -40,7 +45,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.util.*
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
 
 
 class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultListener,
@@ -246,6 +254,21 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
 
             }
+            val compressionRatio = 20 //1 == originalImage, 2 = 50% compression, 4=25% compress
+
+            val file: File = File(pictureFilePath)
+            try {
+                var bitmap = BitmapFactory.decodeFile(file.path)
+                bitmap = degreeRotate(rotation(bitmap, file), 0f)
+                bitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    compressionRatio,
+                    FileOutputStream(file)
+                )
+            } catch (t: Throwable) {
+                Log.e("ERROR", "Error compressing file.$t")
+                t.printStackTrace()
+            }
 
             uploadImage(
                 token,
@@ -255,6 +278,31 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         }
 
     }
+
+    private fun rotation(bitmap: Bitmap, file: File): Bitmap {
+        val ei = ExifInterface(file.path)
+        val orientation: Int = ei.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_NORMAL
+        )
+
+        return when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270)
+            else -> bitmap
+        }
+    }
+
+    private fun degreeRotate(img: Bitmap, degree: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(degree)
+        val rotatedImg =
+            Bitmap.createBitmap(img, 0, 0, img.width, img.height, matrix, true)
+        img.recycle()
+        return rotatedImg
+    }
+
 
     override fun onClick(view: View?) {
         when (view?.id) {
@@ -470,6 +518,33 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
         subOrder = order
         imageView = uImageView
         checkPermissions(Manifest.permission.CAMERA, MY_PERMISSIONS_REQUEST_CAMERA)
+    }
+
+    private fun setPic() {
+        // Get the dimensions of the View
+        val targetW: Int = imageView!!.width
+        val targetH: Int = imageView!!.height
+
+        val bmOptions = BitmapFactory.Options().apply {
+            // Get the dimensions of the bitmap
+            inJustDecodeBounds = true
+
+            BitmapFactory.decodeFile(currentPhotoPath, this)
+
+            val photoW: Int = outWidth
+            val photoH: Int = outHeight
+
+            // Determine how much to scale down the image
+            val scaleFactor: Int = Math.max(2, Math.min(photoW / targetW, photoH / targetH))
+
+            // Decode the image file into a Bitmap sized to fill the View
+            inJustDecodeBounds = false
+            inSampleSize = scaleFactor
+            inPurgeable = true
+        }
+        BitmapFactory.decodeFile(currentPhotoPath, bmOptions)?.also { bitmap ->
+            imageView?.setImageBitmap(bitmap)
+        }
     }
 
     override fun onPause() {

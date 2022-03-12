@@ -9,6 +9,7 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
+
     <View
         android:id="@+id/context_view"
         android:layout_width="match_parent"
@@ -16,6 +17,7 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="parent" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -43,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/radius"
                     android:orientation="vertical">
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -184,23 +187,23 @@
                     </LinearLayout>
 
                     <TextView
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/thirty"
                         android:gravity="center"
                         android:text="@string/uploaded_image"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/twenty" />
+                        android:textSize="@dimen/twenty"
+                        android:visibility="gone" />
 
                     <androidx.appcompat.widget.LinearLayoutCompat
-                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/fifteen"
                         android:layout_marginBottom="@dimen/ten"
                         android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/imageCardView"
@@ -209,6 +212,7 @@
                             app:cardBackgroundColor="@color/peach"
                             app:cardCornerRadius="@dimen/radius"
                             app:cardElevation="0dp">
+
                             <ImageView
                                 android:id="@+id/uploaded_image"
                                 android:layout_width="@dimen/hundred"
@@ -221,11 +225,11 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:visibility="visible"
                 android:id="@+id/suborders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/ten"
+                android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@+id/footer_card"
                 app:layout_constraintTop_toBottomOf="@+id/detail"
                 tools:listitem="@layout/suborder_view_design" />
@@ -241,7 +245,6 @@
                 android:textStyle="bold"
                 android:visibility="visible"
                 app:layout_constraintTop_toBottomOf="@+id/detail" />
-
 
 
             <RelativeLayout
@@ -289,14 +292,14 @@
             </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
     <Button
         android:id="@+id/delivered_btn"
         android:layout_width="match_parent"
         android:layout_height="@dimen/sixty"
         android:layout_marginHorizontal="@dimen/fifteen"
-        android:text="@string/mark_delivered"
         android:backgroundTint="@color/green"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView">
-    </Button>
+        android:text="@string/mark_delivered"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView"></Button>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
