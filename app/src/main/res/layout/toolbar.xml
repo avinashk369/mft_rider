@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@drawable/toolbar_background"
-    android:elevation="1dp"
+    android:elevation="0dp"
     android:gravity="center"
     android:theme="@style/AppTheme.Mytoolbar"
     android:fitsSystemWindows="true"
