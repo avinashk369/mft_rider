@@ -155,6 +155,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private fun getOrderHistory(token: String) {
         try {
+            dialog.show()
             val orderHistory = apiService.getOrderHistory("Bearer $token")
             orderHistory.enqueue(object : Callback<Data> {
                 override fun onResponse(call: Call<Data>, response: Response<Data>) {
@@ -167,7 +168,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                         }
 
                     } else {
-                        Log.d("accepted order count", "Whats going ons")
+                         shared.edit().clear().commit()
                         Intent(
                             this@HomeActivity,
                             LoginActivity::class.java
@@ -176,14 +177,20 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             finish()
                         }
                     }
+                    if(dialog.isShowing)
+                        dialog.dismiss()
                 }
 
                 override fun onFailure(call: Call<Data>, t: Throwable) {
                     Log.d("Failed", "Order history failed here")
+                    if(dialog.isShowing)
+                        dialog.dismiss()
                 }
             })
         } catch (e: Exception) {
             Log.d("Exception", "Something went wrong getting history")
+            if(dialog.isShowing)
+                dialog.dismiss()
         }
     }
 
@@ -216,6 +223,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     private fun getOrders(token: String, type: String) {
         try {
+            dialog.show()
             val orders = apiService.getAllOrders("Bearer $token", type, "1")
             orders.enqueue(object : Callback<Order> {
                 override fun onResponse(call: Call<Order>, response: Response<Order>) {
@@ -232,6 +240,7 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                         }
 
                     } else {
+                        shared.edit().clear().commit()
                         Intent(
                             this@HomeActivity,
                             LoginActivity::class.java
@@ -240,15 +249,21 @@ class HomeActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                             finish()
                         }
                     }
+                    if(dialog.isShowing)
+                        dialog.dismiss()
                 }
 
                 override fun onFailure(call: Call<Order>, t: Throwable) {
                     Log.d("On Failure", "Something went wrong")
+                    if(dialog.isShowing)
+                        dialog.dismiss()
                 }
 
             })
         } catch (e: Exception) {
             Log.d("Exception", "Something went wrong getting order")
+            if(dialog.isShowing)
+                dialog.dismiss()
         }
 
     }

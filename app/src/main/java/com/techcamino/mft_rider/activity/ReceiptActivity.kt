@@ -358,6 +358,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     }
                     Log.d("data getting", response.body()?.result?.orderInfo?.shippingCity!!)
                 } else {
+                    shared.edit().clear().commit()
                     Intent(
                         this@ReceiptActivity,
                         LoginActivity::class.java
