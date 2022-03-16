@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 object ApiClient {
-    val baseUrl = "http://15.207.232.245/vendors/"//""https://quotable.io/"
+    val baseUrl = "https://partner.myflowertree.com/"//""https://quotable.io/"
     val apiInterface: ApiInterface
 
     init {
