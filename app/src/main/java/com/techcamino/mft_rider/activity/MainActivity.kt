@@ -29,7 +29,7 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-//github repo
+
 class MainActivity : AppCompatActivity() {
     lateinit var apiService: ApiInterface
     private var coroutineJob: Job? = null
