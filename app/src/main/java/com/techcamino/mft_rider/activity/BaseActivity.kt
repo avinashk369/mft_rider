@@ -1,6 +1,7 @@
 package com.techcamino.mft_rider.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentValues
@@ -10,6 +11,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.media.ExifInterface
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
@@ -84,7 +86,51 @@ abstract class BaseActivity : AppCompatActivity() {
 
        return "$fileName.jpg"
     }
+    fun getOrientation(shareUri: Uri): Int {
+        val orientationColumn = arrayOf(MediaStore.Images.Media.ORIENTATION)
+        val cur =
+            contentResolver.query(
+                shareUri,
+                orientationColumn,
+                null,
+                null,
+                null
+            )
+        var orientation = -1
+        if (cur != null && cur.moveToFirst()) {
+            if(cur.columnCount > 0){
+                orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]))
+            }
+            cur.close()
+        }
+        return  orientation
+    }
 
+    @SuppressLint("NewApi")
+    fun getOrientation2(shareUri: Uri): Int {
+        var inputStream: InputStream =
+            contentResolver.openInputStream(shareUri)!!
+        return  getOrientation3(inputStream)
+    }
+
+    @SuppressLint("NewApi")
+    private fun getOrientation3(inputStream: InputStream): Int {
+        val exif: ExifInterface
+        var orientation: Int = -1
+        try {
+            exif = ExifInterface(inputStream)
+
+            orientation = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION, 0
+            )
+            Log.d("EXIF", "Exif: $orientation")
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return  orientation
+
+    }
     fun ShowPrompt(isPermanentlyDenied: Boolean) {
         val alertBuilder = AlertDialog.Builder(this)
         alertBuilder.setCancelable(true)

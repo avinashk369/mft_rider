@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.techcamino.mft_rider">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -7,10 +8,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"-->
-    <!--        tools:ignore="ScopedStorage" />-->
-    <!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
-
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -20,8 +22,8 @@
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />
         </intent>
-
     </queries>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -73,9 +75,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path" />
-        </provider>
-
-        <!-- Location service -->
+        </provider> <!-- Location service -->
         <service
             android:name=".services.LocationUpdatesService"
             android:enabled="true"

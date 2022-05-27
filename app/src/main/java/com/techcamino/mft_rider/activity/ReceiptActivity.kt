@@ -49,6 +49,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage
+import com.techcamino.mft_rider.BuildConfig
 
 
 class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultListener,
@@ -163,7 +164,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             }
         }
         val imageName = subOrder?.subOrderId
-        val image = File(imagePath, "$imageName$fileName.jpg")
+        val image = File.createTempFile("$imageName$fileName", ".jpg")
         Log.d("image path", image.absolutePath)
 
         pictureFilePath = image.absolutePath
@@ -176,6 +177,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
      */
     private fun clickPhoto(requestCode: Int) {
 
+Log.d("clicking photo"," into photo capture")
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         takePictureIntent.resolveActivity(packageManager)?.also {
             // Create the File where the photo should go
@@ -195,7 +197,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
                 mimeType = "image/*"
                 val values = ContentValues().apply {
-                    put(MediaStore.Images.Media.DISPLAY_NAME, getNewFileName(order?.orderId!!))
+                    put(MediaStore.Images.Media.DISPLAY_NAME, getNewFileName(subOrder?.subOrderId!!))
                     put(MediaStore.Images.Media.MIME_TYPE, mimeType)
                     put(
                         MediaStore.Images.Media.RELATIVE_PATH,
@@ -205,22 +207,13 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    Log.d("into if", photoURI.toString())
                 } else {
-
                     val imageUri =
-                        contentResolver.insert(
-                            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL),
-                            values
-                        )
-                    Log.d("into elese", photoFile.toString())
+                        contentResolver.insert(MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL), values)
                     if (imageUri != null) {
-
                         pictureFilePath = imageUri.toString()
                         shareUri = imageUri
-                        Log.d("avinash", pictureFilePath!!)
                     }
-
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
                 }
                 initRequestCode(takePictureIntent, requestCode)
@@ -243,6 +236,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
 
         if (currentRequestCode == REQUEST_IMAGE_CAPTURE_WITHOUT_SCALE) {
 
+
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
                 val file = File(pictureFilePath!!)
                 shareUri = FileProvider.getUriForFile(
@@ -251,30 +245,73 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
                     file
                 )
             } else {
-
+                var image: Bitmap = getBitmapFromContentResolver(Uri.parse(pictureFilePath))
 
             }
             val compressionRatio = 20 //1 == originalImage, 2 = 50% compression, 4=25% compress
 
-            val file: File = File(pictureFilePath)
-            try {
-                var bitmap = BitmapFactory.decodeFile(file.path)
-                bitmap = degreeRotate(rotation(bitmap, file), 0f)
-                bitmap.compress(
-                    Bitmap.CompressFormat.JPEG,
-                    compressionRatio,
-                    FileOutputStream(file)
+//            val file: File = File(pictureFilePath)
+//            try {
+//                var bitmap = BitmapFactory.decodeFile(file.path)
+//                bitmap = degreeRotate(rotation(bitmap, file), 0f)
+//                bitmap.compress(
+//                    Bitmap.CompressFormat.JPEG,
+//                    compressionRatio,
+//                    FileOutputStream(file)
+//                )
+//            } catch (t: Throwable) {
+//                Log.e("ERROR", "Error compressing file.$t")
+//                t.printStackTrace()
+//            }
+            if(!shareUri.toString().isNullOrEmpty()){
+                Log.d("34245452", shareUri.toString())
+                var image: Bitmap = getBitmapFromContentResolver(this!!.shareUri!!)
+
+                var orientation: Int = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                    getOrientation2(this!!.shareUri!!)
+                }else{
+                    getOrientation(this!!.shareUri!!)
+                }
+
+                val file = if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R){
+                    createImageFile("mft",subOrder?.subOrderId!! )
+                }else{
+                    File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)}" + File.separator + "MihirDemo",getNewFileName(subOrder?.subOrderId!! ))
+                }
+                var fos: FileOutputStream = FileOutputStream(file)
+                var bitmap = image
+
+                if (orientation != -1 && orientation != 0) {
+
+                    val matrix = Matrix()
+                    if (orientation == 6) {
+                        matrix.postRotate(90f)
+                        Log.d("EXIF", "Exif: $orientation")
+                    } else if (orientation == 3) {
+                        matrix.postRotate(180f)
+                        Log.d("EXIF", "Exif: $orientation")
+                    } else if (orientation == 8) {
+                        matrix.postRotate(270f)
+                        Log.d("EXIF", "Exif: $orientation")
+                    }else{
+                        matrix.postRotate(orientation.toFloat())
+                    }
+                    bitmap = Bitmap.createBitmap(
+                        bitmap, 0, 0,
+                        bitmap.width, bitmap.height, matrix,
+                        true
+                    )
+                }
+
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+                uploadImage(
+                    token,
+                    subOrder?.subOrderId!!,
+                   file
                 )
-            } catch (t: Throwable) {
-                Log.e("ERROR", "Error compressing file.$t")
-                t.printStackTrace()
+
             }
 
-            uploadImage(
-                token,
-                subOrder?.subOrderId!!,
-                File(pictureFilePath!!)
-            )
         }
 
     }
@@ -530,7 +567,7 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             // Get the dimensions of the bitmap
             inJustDecodeBounds = true
 
-            BitmapFactory.decodeFile(currentPhotoPath, this)
+            BitmapFactory.decodeFile(pictureFilePath, this)
 
             val photoW: Int = outWidth
             val photoH: Int = outHeight
@@ -543,8 +580,8 @@ class ReceiptActivity : BaseActivity(), View.OnClickListener, OnActivityResultLi
             inSampleSize = scaleFactor
             inPurgeable = true
         }
-        BitmapFactory.decodeFile(currentPhotoPath, bmOptions)?.also { bitmap ->
-            imageView?.setImageBitmap(bitmap)
+        BitmapFactory.decodeFile(pictureFilePath, bmOptions)?.also { bitmap ->
+
         }
     }
 
